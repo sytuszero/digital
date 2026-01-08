@@ -515,6 +515,25 @@ body::before {
 /* ==================== MAIN CONTENT ====================
 
 /* ==================== GATE SELECTOR ==================== */
+.gate-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.gate-group:last-child {
+    margin-bottom: 0;
+}
+
+.gate-group-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--glass-border);
+    font-family: 'Alexandria', 'Inter', sans-serif;
+    direction: rtl;
+}
+
 .gate-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
