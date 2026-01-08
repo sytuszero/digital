@@ -150,7 +150,7 @@ body::before {
 }
 
 .creator-credit {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
     font-weight: 300;
     margin-top: var(--spacing-xs);
