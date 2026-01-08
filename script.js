@@ -499,7 +499,16 @@ const stepsContent = document.getElementById('steps-content');
 
 // Input validation
 binaryInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/[^01]/g, '');
+    // Allow 0, 1, and one decimal point
+    let value = e.target.value;
+    // Remove any characters that aren't 0, 1, or .
+    value = value.replace(/[^01.]/g, '');
+    // Ensure only one decimal point
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    e.target.value = value;
 });
 
 decimalInput.addEventListener('input', (e) => {
@@ -522,14 +531,40 @@ function autoConvert(from) {
     let value;
 
     if (from === 'binary' && binaryInput.value) {
-        value = parseInt(binaryInput.value, 2);
-        if (!isNaN(value)) {
-            decimalInput.value = value;
+        // Handle binary with decimal point
+        const binaryStr = binaryInput.value;
+        if (binaryStr.includes('.')) {
+            const [intPart, fracPart] = binaryStr.split('.');
+            let decimalValue = 0;
+
+            // Convert integer part
+            if (intPart) {
+                decimalValue += parseInt(intPart, 2) || 0;
+            }
+
+            // Convert fractional part
+            if (fracPart) {
+                for (let i = 0; i < fracPart.length; i++) {
+                    if (fracPart[i] === '1') {
+                        decimalValue += Math.pow(2, -(i + 1));
+                    }
+                }
+            }
+
+            decimalInput.value = decimalValue;
+        } else {
+            value = parseInt(binaryInput.value, 2);
+            if (!isNaN(value)) {
+                decimalInput.value = value;
+            }
         }
     } else if (from === 'decimal' && decimalInput.value) {
-        value = parseInt(decimalInput.value, 10);
+        value = parseFloat(decimalInput.value);
         if (!isNaN(value)) {
-            binaryInput.value = value.toString(2);
+            // For now, only convert integer part to binary
+            // Full decimal to binary fraction conversion is complex
+            const intPart = Math.floor(value);
+            binaryInput.value = intPart.toString(2);
         }
     }
 }
@@ -549,6 +584,16 @@ function showBinaryToDecimalSteps(binary) {
     const stepCard = document.createElement('div');
     stepCard.className = 'step-card';
 
+    // Check if binary has decimal point
+    const hasFraction = binary.includes('.');
+    let intPart = binary;
+    let fracPart = '';
+
+    if (hasFraction) {
+        [intPart, fracPart] = binary.split('.');
+        intPart = intPart || '0';
+    }
+
     // Create visual representation with arrows
     let binaryDigits = '';
     let arrows = '';
@@ -557,9 +602,10 @@ function showBinaryToDecimalSteps(binary) {
     let calculation = '';
     let total = 0;
 
-    for (let i = 0; i < binary.length; i++) {
-        const position = binary.length - 1 - i;
-        const digit = binary[i];
+    // Process integer part
+    for (let i = 0; i < intPart.length; i++) {
+        const position = intPart.length - 1 - i;
+        const digit = intPart[i];
         const value = parseInt(digit) * Math.pow(2, position);
         total += value;
 
@@ -577,6 +623,36 @@ function showBinaryToDecimalSteps(binary) {
         calculation += `${value}`;
     }
 
+    // Add decimal point if present
+    if (hasFraction) {
+        binaryDigits += `<span class="binary-digit decimal-point">.</span>`;
+        arrows += `<span class="arrow"> </span>`;
+        powers += `<span class="power-label"> </span>`;
+    }
+
+    // Process fractional part
+    if (hasFraction && fracPart) {
+        for (let i = 0; i < fracPart.length; i++) {
+            const position = -(i + 1);
+            const digit = fracPart[i];
+            const value = parseInt(digit) * Math.pow(2, position);
+            total += value;
+
+            // Build visual representation
+            binaryDigits += `<span class="binary-digit">${digit}</span>`;
+            arrows += `<span class="arrow">↓</span>`;
+            powers += `<span class="power-label">2<sup>${position}</sup></span>`;
+
+            // Build formula
+            if (i > 0 || intPart.length > 0) {
+                formula += ' + ';
+                calculation += ' + ';
+            }
+            formula += `(${digit} × 2<sup>${position}</sup>)`;
+            calculation += `${value.toFixed(10).replace(/\.?0+$/, '')}`;
+        }
+    }
+
     stepCard.innerHTML = `
         <div class="step-title">Binary → Decimal: ${binary}₂</div>
         
@@ -587,13 +663,15 @@ function showBinaryToDecimalSteps(binary) {
         </div>
         
         <div class="step-explanation">
-            كل رقم ثنائي يتم ضربه في 2 مرفوعة لقوة موضعه (من اليمين، بدءاً من 0)
+            ${hasFraction ?
+            'الأرقام قبل الفاصلة تُضرب في قوى موجبة من 2، والأرقام بعد الفاصلة تُضرب في قوى سالبة من 2' :
+            'كل رقم ثنائي يتم ضربه في 2 مرفوعة لقوة موضعه (من اليمين، بدءاً من 0)'}
         </div>
         
         <div class="step-formula">${formula}</div>
         <div class="step-formula">${calculation}</div>
         
-        <div class="step-result">النتيجة النهائية: ${total}₁₀</div>
+        <div class="step-result">النتيجة النهائية: ${total.toFixed(10).replace(/\.?0+$/, '')}₁₀</div>
     `;
 
     stepsContent.appendChild(stepCard);
