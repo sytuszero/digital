@@ -40,61 +40,111 @@
             <!-- Gate Selection Panel -->
             <section class="gate-selector-panel glass-card" dir="rtl">
                 <h2 class="section-title">اختر البوابة المنطقية</h2>
-                <div class="gate-grid">
-                    <button class="gate-btn active" data-gate="AND">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 10 5 L 45 5 Q 70 5 70 30 Q 70 55 45 55 L 10 55 L 10 5 Z" stroke="currentColor"
-                                stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">AND</span>
-                    </button>
-                    <button class="gate-btn" data-gate="OR">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 10 5 Q 25 5 35 15 Q 45 25 50 30 Q 45 35 35 45 Q 25 55 10 55 Q 18 30 10 5 Z"
-                                stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">OR</span>
-                    </button>
-                    <button class="gate-btn" data-gate="NOT">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 15 15 L 15 45 L 60 30 Z" stroke="currentColor" stroke-width="2" fill="none" />
-                            <circle cx="67" cy="30" r="5" stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">NOT</span>
-                    </button>
-                    <button class="gate-btn" data-gate="XOR">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 5 5 Q 13 30 5 55" stroke="currentColor" stroke-width="2" fill="none" />
-                            <path d="M 10 5 Q 25 5 35 15 Q 45 25 50 30 Q 45 35 35 45 Q 25 55 10 55 Q 18 30 10 5 Z"
-                                stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">XOR</span>
-                    </button>
-                    <button class="gate-btn" data-gate="NAND">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 10 5 L 45 5 Q 70 5 70 30 Q 70 55 45 55 L 10 55 L 10 5 Z" stroke="currentColor"
-                                stroke-width="2" fill="none" />
-                            <circle cx="77" cy="30" r="5" stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">NAND</span>
-                    </button>
-                    <button class="gate-btn" data-gate="NOR">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 10 5 Q 25 5 35 15 Q 45 25 50 30 Q 45 35 35 45 Q 25 55 10 55 Q 18 30 10 5 Z"
-                                stroke="currentColor" stroke-width="2" fill="none" />
-                            <circle cx="57" cy="30" r="5" stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">NOR</span>
-                    </button>
-                    <button class="gate-btn" data-gate="XNOR">
-                        <svg class="gate-icon-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 5 5 Q 13 30 5 55" stroke="currentColor" stroke-width="2" fill="none" />
-                            <path d="M 10 5 Q 25 5 35 15 Q 45 25 50 30 Q 45 35 35 45 Q 25 55 10 55 Q 18 30 10 5 Z"
-                                stroke="currentColor" stroke-width="2" fill="none" />
-                            <circle cx="57" cy="30" r="5" stroke="currentColor" stroke-width="2" fill="none" />
-                        </svg>
-                        <span class="gate-name">XNOR</span>
-                    </button>
+
+                <!-- Basic Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات الأساسية</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn active" data-gate="AND">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="140" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">AND</span>
+                        </button>
+                        <button class="gate-btn" data-gate="OR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="110" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">OR</span>
+                        </button>
+                        <button class="gate-btn" data-gate="NOT">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 50 120 L 130 75 Z" fill="none" />
+                                <circle cx="140" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="75" x2="50" y2="75" />
+                                <line x1="150" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NOT</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inverted Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات المعكوسة (NOT + Basic)</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn" data-gate="NAND">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z"
+                                    fill="none" />
+                                <circle cx="150" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="160" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NAND</span>
+                        </button>
+                        <button class="gate-btn" data-gate="NOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <circle cx="120" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="130" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NOR</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Special Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات الخاصة</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn" data-gate="XOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 40 30 Q 50 75 40 120" fill="none" />
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="110" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">XOR</span>
+                        </button>
+                        <button class="gate-btn" data-gate="XNOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 40 30 Q 50 75 40 120" fill="none" />
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <circle cx="120" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="130" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">XNOR</span>
+                        </button>
+                    </div>
                 </div>
             </section>
 
