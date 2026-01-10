@@ -228,20 +228,104 @@
             <section class="converter-panel glass-card">
                 <h2 class="section-title">محول الأنظمة العددية</h2>
 
-                <div class="converter-grid">
-                    <!-- Binary Input -->
-                    <div class="number-input-group">
-                        <label class="number-label">Binary (ثنائي)</label>
-                        <input type="text" id="binary-input" class="number-input" placeholder="11.01 or 11011"
-                            maxlength="20">
-                        <span class="input-hint">Base 2 (0-1)</span>
+                <!-- Strategy Map (Arabic) -->
+                <div class="relations-map"
+                    style="background: rgba(15, 23, 42, 0.95); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="margin: 0 0 2rem 0; font-size: 1.2rem; color: #fff; text-align: center;">🛣️ كيف تحل أي
+                        مسألة؟ (خارطة الحل)</h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                        <!-- Path 1: The Universal Rule -->
+                        <div class="strategy-container">
+                            <div class="strategy-label">القاعدة الذهبية (The Golden Rule)</div>
+
+                            <p class="strategy-description">
+                                للتحويل بين أي نظامين، نستخدم <strong>النظام العشري</strong> كجسر (محطة عبور).
+                            </p>
+
+                            <div class="strategy-flow">
+                                <!-- Step 1 -->
+                                <div class="strategy-step">
+                                    <div class="step-header">1. أي نظام</div>
+                                    <div class="step-card start">
+                                        البداية (Source)
+                                        <div class="step-action">استخدم الضرب (×)</div>
+                                    </div>
+                                </div>
+
+                                <!-- Arrow 1 -->
+                                <div class="strategy-arrow">
+                                    <div class="arrow-icon">➜</div>
+                                </div>
+
+                                <!-- The Bridge -->
+                                <div class="strategy-bridge">
+                                    <div class="bridge-title">10 (عشري)</div>
+                                    <div class="bridge-subtitle">الجسر (Bridge)</div>
+                                </div>
+
+                                <!-- Arrow 2 -->
+                                <div class="strategy-arrow">
+                                    <div class="arrow-icon arrow-red">➜</div>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="strategy-step">
+                                    <div class="step-header">2. النظام المطلوب</div>
+                                    <div class="step-card end">
+                                        النهاية (Target)
+                                        <div class="step-action action-red">استخدم القسمة (÷)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="strategy-summary">
+                                <div class="summary-title">📝 ملخص الخطوات:</div>
+                                <div class="summary-text">
+                                    1. حول الرقم من نظامه الحالي إلى <strong>العشري</strong> (بالضرب).<br>
+                                    2. خذ النتيجة وحولها من العشري إلى <strong>النظام المطلوب</strong> (بالقسمة).
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="converter-layout">
+                    <!-- From Section -->
+                    <div class="converter-section">
+                        <label class="converter-label">من (From)</label>
+                        <select id="from-base" class="base-select">
+                            <option value="2">Binary (ثنائي)</option>
+                            <option value="8">Octal (ثماني)</option>
+                            <option value="10" selected>Decimal (عشري)</option>
+                            <option value="16">Hexadecimal (سداسي عشر)</option>
+                        </select>
+                        <input type="text" id="input-value" class="number-input" placeholder="أدخل الرقم">
+                        <span class="input-hint" id="input-hint">Base 10 (0-9)</span>
                     </div>
 
-                    <!-- Decimal Input -->
-                    <div class="number-input-group">
-                        <label class="number-label">Decimal (عشري)</label>
-                        <input type="text" id="decimal-input" class="number-input" placeholder="53" maxlength="10">
-                        <span class="input-hint">Base 10 (0-9)</span>
+                    <!-- Swap Button -->
+                    <div class="swap-container">
+                        <button class="swap-btn" id="swap-btn" title="Swap">
+                            <span class="swap-icon">⇄</span>
+                        </button>
+                    </div>
+
+                    <!-- To Section -->
+                    <div class="converter-section">
+                        <label class="converter-label">إلى (To)</label>
+                        <select id="to-base" class="base-select">
+                            <option value="2" selected>Binary (ثنائي)</option>
+                            <option value="8">Octal (ثماني)</option>
+                            <option value="10">Decimal (عشري)</option>
+                            <option value="16">Hexadecimal (سداسي عشر)</option>
+                        </select>
+                        <div class="result-display" id="result-display">
+                            <span class="result-value" id="result-value">-</span>
+                        </div>
+                        <span class="input-hint" id="output-hint">Base 2 (0-1)</span>
                     </div>
                 </div>
 
@@ -264,14 +348,24 @@
                 <h2 class="section-title">مرجع سريع</h2>
                 <div class="reference-grid">
                     <div class="reference-card">
-                        <h3>Binary → Decimal</h3>
-                        <p class="formula">∑(digit × 2<sup>position</sup>)</p>
+                        <h3>Binary (Base 2)</h3>
+                        <p class="formula">Digits: 0-1</p>
                         <p class="example">1101₂ = 1×2³ + 1×2² + 0×2¹ + 1×2⁰ = 13₁₀</p>
                     </div>
                     <div class="reference-card">
-                        <h3>Decimal → Binary</h3>
-                        <p class="formula">قسمة متكررة على 2</p>
-                        <p class="example">13 ÷ 2 = 6 R1, 6 ÷ 2 = 3 R0, 3 ÷ 2 = 1 R1, 1 ÷ 2 = 0 R1 → 1101₂</p>
+                        <h3>Octal (Base 8)</h3>
+                        <p class="formula">Digits: 0-7</p>
+                        <p class="example">15₈ = 1×8¹ + 5×8⁰ = 13₁₀</p>
+                    </div>
+                    <div class="reference-card">
+                        <h3>Decimal (Base 10)</h3>
+                        <p class="formula">Digits: 0-9</p>
+                        <p class="example">13₁₀ = 1×10¹ + 3×10⁰</p>
+                    </div>
+                    <div class="reference-card">
+                        <h3>Hexadecimal (Base 16)</h3>
+                        <p class="formula">Digits: 0-9, A-F</p>
+                        <p class="example">D₁₆ = 13₁₀, 1F₁₆ = 31₁₀</p>
                     </div>
                 </div>
             </section>
