@@ -1024,7 +1024,7 @@ function showFromDecimalSteps(decimal, toBase, fromBase = 10) {
         `;
     }
 
-    htmlContent += `<div class="step-result">✅ النتيجة النهائية: ${finalResult}${baseSubscript}</div>`;
+    htmlContent += `<div class="step-result">✅ النتيجة النهائية: <span style="direction: ltr; display: inline-block;">${finalResult}${baseSubscript}</span></div>`;
 
     stepCard.innerHTML = htmlContent;
     stepsContent.appendChild(stepCard);
