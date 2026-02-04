@@ -840,6 +840,7 @@ body::before {
 .gate-svg {
     width: 180px;
     height: 120px;
+    color: var(--accent-primary);
     margin-bottom: var(--spacing-sm);
     filter: drop-shadow(0 4px 12px hsla(280, 85%, 65%, 0.3));
     transition: all var(--transition-normal);
@@ -2006,7 +2007,7 @@ body::before {
     background: var(--bg-primary);
     border: 2px solid var(--glass-border);
     border-radius: var(--radius-md);
-    cursor: grab;
+    cursor: pointer;
     transition: all var(--transition-normal);
 }
 
@@ -2017,7 +2018,7 @@ body::before {
 }
 
 .draggable-switch:active {
-    cursor: grabbing;
+    cursor: pointer;
     transform: scale(0.95);
 }
 
@@ -2494,6 +2495,7 @@ body::before {
     padding: 0 var(--spacing-sm);
     border-left: 2px dashed var(--glass-border);
 }
+
 /* ==================== MOBILE RESPONSIVE OPTIMIZATIONS ==================== */
 
 @media (max-width: 768px) {
@@ -2501,17 +2503,17 @@ body::before {
         flex-direction: column;
         gap: var(--spacing-sm);
     }
-    
+
     .steps-table {
         font-size: 0.85rem;
     }
-    
+
     .steps-table th,
     .steps-table td {
         padding: var(--spacing-xs);
         font-size: 0.8rem;
     }
-    
+
     .read-arrow-vertical {
         font-size: 1.5rem;
         border-left: none;
@@ -2520,12 +2522,12 @@ body::before {
         width: 100%;
         justify-content: center;
     }
-    
+
     .gate-svg-quiz {
         width: 150px;
         height: 112px;
     }
-    
+
     .switches-container {
         grid-template-columns: 1fr 1fr;
     }
@@ -2535,51 +2537,52 @@ body::before {
     .title {
         font-size: 1.8rem;
     }
-    
+
     .tab-btn {
         padding: var(--spacing-xs) var(--spacing-sm);
         font-size: 0.85rem;
     }
-    
+
     .steps-table {
         font-size: 0.75rem;
     }
-    
+
     .steps-table th,
     .steps-table td {
         padding: 4px;
         font-size: 0.7rem;
     }
-    
+
     .gate-svg-quiz {
         width: 120px;
         height: 90px;
     }
-    
+
     .switches-container {
         grid-template-columns: 1fr;
     }
-    
+
     .quiz-actions {
         flex-direction: column;
     }
-    
+
     .quiz-actions button {
         width: 100%;
     }
 }
 
 @media (hover: none) and (pointer: coarse) {
+
     .tab-btn,
     .gate-btn,
     button {
         min-height: 44px;
     }
-    
+
     .draggable-switch {
         min-height: 60px;
     }
-    
+
     .draggable-switch,
     .drop-zone-box {
         -webkit-user-select: none;
@@ -2590,46 +2593,47 @@ body::before {
 /* ==================== QUIZ MOBILE OPTIMIZATIONS ==================== */
 
 @media (max-width: 768px) {
+
     /* Compact quiz layout */
     .quiz-question-panel {
         padding: var(--spacing-sm);
     }
-    
+
     .question-content {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
         margin-bottom: var(--spacing-md);
     }
-    
+
     .gate-display-quiz {
         padding: var(--spacing-md);
     }
-    
+
     .gate-svg-quiz {
         width: 120px;
         height: 90px;
     }
-    
+
     .gate-name-quiz {
         font-size: 1.2rem;
         padding: var(--spacing-xs) var(--spacing-md);
     }
-    
+
     /* Compact output display */
     .output-display-quiz {
         width: 80px;
         height: 80px;
         border-width: 3px;
     }
-    
+
     .output-value-large {
         font-size: 2.5rem;
     }
-    
+
     .required-output h3 {
         font-size: 1rem;
     }
-    
+
     /* Compact interactive area */
     .quiz-interactive-area {
         grid-template-columns: 1fr;
@@ -2637,100 +2641,100 @@ body::before {
         padding: var(--spacing-md);
         margin-bottom: var(--spacing-md);
     }
-    
+
     .inputs-drag-area {
         gap: var(--spacing-md);
     }
-    
+
     .drop-zone-box {
         min-height: 70px;
         padding: var(--spacing-sm);
     }
-    
+
     .drop-zone-label {
         font-size: 0.95rem;
     }
-    
+
     /* Compact switches */
     .draggable-switches h3 {
         font-size: 1rem;
         margin-bottom: var(--spacing-xs);
     }
-    
+
     .switches-container {
         grid-template-columns: 1fr 1fr;
         gap: var(--spacing-sm);
     }
-    
+
     .draggable-switch {
         padding: var(--spacing-sm);
     }
-    
+
     .switch-visual {
         width: 60px;
         height: 30px;
     }
-    
+
     .switch-toggle {
         width: 22px;
         height: 22px;
         top: 2px;
     }
-    
+
     .switch-visual.off .switch-toggle {
         left: 4px;
     }
-    
+
     .switch-visual.on .switch-toggle {
         right: 4px;
     }
-    
+
     .switch-label {
         font-size: 0.85rem;
     }
-    
+
     /* Compact stats */
     .quiz-stats {
         gap: var(--spacing-sm);
         margin-bottom: var(--spacing-md);
     }
-    
+
     .stat-item {
         padding: var(--spacing-sm);
     }
-    
+
     .stat-value {
         font-size: 1.5rem;
     }
-    
+
     .stat-label {
         font-size: 0.8rem;
     }
-    
+
     /* Compact feedback */
     .feedback-section {
         padding: var(--spacing-md);
         margin-bottom: var(--spacing-md);
     }
-    
+
     .feedback-icon {
         font-size: 2rem;
     }
-    
+
     .feedback-title {
         font-size: 1.2rem;
     }
-    
+
     .feedback-message {
         font-size: 0.9rem;
     }
-    
+
     /* Compact actions */
     .quiz-actions {
         gap: var(--spacing-sm);
         margin-top: var(--spacing-md);
     }
-    
+
     .quiz-actions button {
         padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.95rem;
@@ -2738,52 +2742,53 @@ body::before {
 }
 
 @media (max-width: 480px) {
+
     /* Ultra compact for small phones */
     .quiz-stats {
         flex-direction: row;
         justify-content: space-around;
     }
-    
+
     .stat-item {
         min-width: 70px;
         padding: var(--spacing-xs);
     }
-    
+
     .stat-value {
         font-size: 1.3rem;
     }
-    
+
     .stat-label {
         font-size: 0.7rem;
     }
-    
+
     .gate-svg-quiz {
         width: 100px;
         height: 75px;
     }
-    
+
     .output-display-quiz {
         width: 70px;
         height: 70px;
     }
-    
+
     .output-value-large {
         font-size: 2rem;
     }
-    
+
     .drop-zone-box {
         min-height: 60px;
     }
-    
+
     .switches-container {
         grid-template-columns: 1fr 1fr;
     }
-    
+
     .switch-visual {
         width: 50px;
         height: 25px;
     }
-    
+
     .switch-toggle {
         width: 18px;
         height: 18px;
@@ -2795,18 +2800,18 @@ body::before {
     .quiz-question-panel {
         padding: var(--spacing-xs);
     }
-    
+
     .question-content,
     .quiz-interactive-area {
         gap: var(--spacing-sm);
         padding: var(--spacing-sm);
     }
-    
+
     .gate-svg-quiz {
         width: 80px;
         height: 60px;
     }
-    
+
     .switches-container {
         grid-template-columns: 1fr;
     }
