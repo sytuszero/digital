@@ -51,6 +51,19 @@ const LOGIC_GATES = {
     }
 };
 
+// ==================== SHARED GATE SHAPES (SVG Paths) ====================
+// These match the shapes in the buttons and quiz for consistency
+const GATE_SHAPES = {
+    AND: `<path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="140" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    OR: `<path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="110" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    NOT: `<path d="M 50 30 L 50 120 L 130 75 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="140" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="75" x2="50" y2="75" stroke="currentColor" stroke-width="3"/><line x1="150" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    NAND: `<path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="150" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="160" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    NOR: `<path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="120" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="130" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    XOR: `<path d="M 40 30 Q 50 75 40 120" fill="none" stroke="currentColor" stroke-width="3"/><path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="110" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
+    XNOR: `<path d="M 40 30 Q 50 75 40 120" fill="none" stroke="currentColor" stroke-width="3"/><path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="120" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="130" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`
+};
+
+// ==================== SVG GATE SHAPES ====================
 // ==================== SVG GATE SHAPES ====================
 function drawGateSVG(gateName, targetSvg = null) {
     const svg = targetSvg || document.getElementById('gate-svg');
@@ -58,242 +71,14 @@ function drawGateSVG(gateName, targetSvg = null) {
     // Clear previous SVG content
     svg.innerHTML = '';
 
-    // Define unique gradient ID to avoid conflicts between simulator and quiz
-    const gradientId = `gateGradient-${Math.random().toString(36).substr(2, 9)}`;
-    const strokeColor = `url(#${gradientId})`;
-    const fillColor = 'none';
-    const strokeWidth = 3;
+    // Get the standard shape (with stroke="currentColor")
+    let shapeHTML = GATE_SHAPES[gateName] || '';
 
-    // Add gradient definition
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-    gradient.setAttribute('id', gradientId);
-    gradient.setAttribute('x1', '0%');
-    gradient.setAttribute('y1', '0%');
-    gradient.setAttribute('x2', '100%');
-    gradient.setAttribute('y2', '100%');
+    // Create a container group for the shape and inject
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.innerHTML = shapeHTML;
 
-    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('style', 'stop-color:hsl(280, 85%, 65%);stop-opacity:1');
-
-    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-    stop2.setAttribute('offset', '100%');
-    stop2.setAttribute('style', 'stop-color:hsl(200, 90%, 55%);stop-opacity:1');
-
-    gradient.appendChild(stop1);
-    gradient.appendChild(stop2);
-    defs.appendChild(gradient);
-    svg.appendChild(defs);
-
-    // Input lines
-    const inputY1 = 45;
-    const inputY2 = 105;
-    const inputX = 20;
-
-    const input1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    input1.setAttribute('x1', inputX);
-    input1.setAttribute('y1', inputY1);
-    input1.setAttribute('x2', inputX + 30);
-    input1.setAttribute('y2', inputY1);
-    input1.setAttribute('stroke', strokeColor);
-    input1.setAttribute('stroke-width', strokeWidth);
-
-    // Draw gate shape based on type
-    switch (gateName) {
-        case 'AND':
-            drawANDGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2And = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2And);
-            break;
-
-        case 'OR':
-            drawORGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2Or = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2Or);
-            break;
-
-        case 'NOT':
-            drawNOTGate(svg, strokeColor, strokeWidth);
-            const inputNot = createInputLine(inputX, 75, inputX + 30, 75, strokeColor, strokeWidth);
-            svg.appendChild(inputNot);
-            break;
-
-        case 'XOR':
-            drawXORGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2Xor = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2Xor);
-            break;
-
-        case 'NAND':
-            drawNANDGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2Nand = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2Nand);
-            break;
-
-        case 'NOR':
-            drawNORGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2Nor = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2Nor);
-            break;
-
-        case 'XNOR':
-            drawXNORGate(svg, strokeColor, strokeWidth);
-            svg.appendChild(input1);
-            const input2Xnor = createInputLine(inputX, inputY2, inputX + 30, inputY2, strokeColor, strokeWidth);
-            svg.appendChild(input2Xnor);
-            break;
-    }
-
-    // Output line
-    const outputLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    const outputX = gateName === 'NOT' ? 155 : 165;
-    outputLine.setAttribute('x1', outputX);
-    outputLine.setAttribute('y1', 75);
-    outputLine.setAttribute('x2', 180);
-    outputLine.setAttribute('y2', 75);
-    outputLine.setAttribute('stroke', strokeColor);
-    outputLine.setAttribute('stroke-width', strokeWidth);
-    svg.appendChild(outputLine);
-}
-
-function createInputLine(x1, y1, x2, y2, stroke, width) {
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', x1);
-    line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2);
-    line.setAttribute('y2', y2);
-    line.setAttribute('stroke', stroke);
-    line.setAttribute('stroke-width', width);
-    return line;
-}
-
-function drawANDGate(svg, stroke, width) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-}
-
-function drawORGate(svg, stroke, width) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-}
-
-function drawNOTGate(svg, stroke, width) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 45 L 50 105 L 130 75 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-
-    // Inverter bubble
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', 140);
-    circle.setAttribute('cy', 75);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('stroke', stroke);
-    circle.setAttribute('stroke-width', width);
-    circle.setAttribute('fill', 'none');
-    svg.appendChild(circle);
-}
-
-function drawXORGate(svg, stroke, width) {
-    // Extra curved line for XOR
-    const extraLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    extraLine.setAttribute('d', 'M 40 30 Q 50 75 40 120');
-    extraLine.setAttribute('stroke', stroke);
-    extraLine.setAttribute('stroke-width', width);
-    extraLine.setAttribute('fill', 'none');
-    svg.appendChild(extraLine);
-
-    // OR gate shape
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-}
-
-function drawNANDGate(svg, stroke, width) {
-    // AND gate shape
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-
-    // Inverter bubble
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', 150);
-    circle.setAttribute('cy', 75);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('stroke', stroke);
-    circle.setAttribute('stroke-width', width);
-    circle.setAttribute('fill', 'none');
-    svg.appendChild(circle);
-}
-
-function drawNORGate(svg, stroke, width) {
-    // OR gate shape
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-
-    // Inverter bubble
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', 120);
-    circle.setAttribute('cy', 75);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('stroke', stroke);
-    circle.setAttribute('stroke-width', width);
-    circle.setAttribute('fill', 'none');
-    svg.appendChild(circle);
-}
-
-function drawXNORGate(svg, stroke, width) {
-    // Extra curved line for XNOR
-    const extraLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    extraLine.setAttribute('d', 'M 40 30 Q 50 75 40 120');
-    extraLine.setAttribute('stroke', stroke);
-    extraLine.setAttribute('stroke-width', width);
-    extraLine.setAttribute('fill', 'none');
-    svg.appendChild(extraLine);
-
-    // OR gate shape
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', 'M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z');
-    path.setAttribute('stroke', stroke);
-    path.setAttribute('stroke-width', width);
-    path.setAttribute('fill', 'none');
-    svg.appendChild(path);
-
-    // Inverter bubble
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', 120);
-    circle.setAttribute('cy', 75);
-    circle.setAttribute('r', 10);
-    circle.setAttribute('stroke', stroke);
-    circle.setAttribute('stroke-width', width);
-    circle.setAttribute('fill', 'none');
-    svg.appendChild(circle);
+    svg.appendChild(g);
 }
 
 // ==================== STATE MANAGEMENT ====================
@@ -1118,15 +903,8 @@ function generateQuizQuestions() {
     return shuffled.slice(0, 20);
 }
 
-const QUIZ_GATE_SHAPES = {
-    AND: `<path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="140" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    OR: `<path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="110" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    NOT: `<path d="M 50 30 L 50 120 L 130 75 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="140" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="75" x2="50" y2="75" stroke="currentColor" stroke-width="3"/><line x1="150" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    NAND: `<path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="150" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="160" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    NOR: `<path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="120" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="130" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    XOR: `<path d="M 40 30 Q 50 75 40 120" fill="none" stroke="currentColor" stroke-width="3"/><path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="110" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`,
-    XNOR: `<path d="M 40 30 Q 50 75 40 120" fill="none" stroke="currentColor" stroke-width="3"/><path d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="120" cy="75" r="10" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20" y1="55" x2="50" y2="55" stroke="currentColor" stroke-width="3"/><line x1="20" y1="95" x2="50" y2="95" stroke="currentColor" stroke-width="3"/><line x1="130" y1="75" x2="170" y2="75" stroke="currentColor" stroke-width="3"/>`
-};
+// Initialized later in file, just reused GATE_SHAPES
+const QUIZ_GATE_SHAPES = GATE_SHAPES;
 
 // Initialize quiz
 function initQuiz() {
@@ -1203,41 +981,37 @@ function resetDropZones() {
     const dropZoneA = document.getElementById('drop-zone-a');
     const dropZoneB = document.getElementById('drop-zone-b');
 
-    dropZoneA.innerHTML = '<span class="drop-placeholder">اسحب هنا</span>';
+    dropZoneA.innerHTML = '<span class="drop-placeholder">اضغط للاختيار</span>';
     dropZoneA.setAttribute('data-value', '');
 
-    dropZoneB.innerHTML = '<span class="drop-placeholder">اسحب هنا</span>';
+    dropZoneB.innerHTML = '<span class="drop-placeholder">اضغط للاختيار</span>';
     dropZoneB.setAttribute('data-value', '');
 
     // Reset all switches to unused state
     document.querySelectorAll('.draggable-switch').forEach(sw => {
         sw.classList.remove('used');
-        sw.setAttribute('draggable', 'true');
+        sw.classList.remove('selected');
+        sw.removeAttribute('draggable'); // Ensure not draggable
+        sw.style.pointerEvents = 'auto';
     });
+
+    // Clear selection state
+    deselectSwitch();
 }
 
 // Setup quiz event listeners
 function setupQuizEventListeners() {
-    // Drag and drop
+    // Interaction setup (Click only)
     const draggableSwitches = document.querySelectorAll('.draggable-switch');
     const dropZones = document.querySelectorAll('.drop-zone-box');
 
     draggableSwitches.forEach(sw => {
-        sw.addEventListener('dragstart', handleDragStart);
-        sw.addEventListener('dragend', handleDragEnd);
+        sw.onclick = handleSwitchClick; // Use onclick to ensure single listener
+        sw.removeAttribute('draggable');
     });
 
     dropZones.forEach(zone => {
-        zone.addEventListener('dragover', handleDragOver);
-        zone.addEventListener('dragleave', handleDragLeave);
-        zone.addEventListener('drop', handleDrop);
-    });
-
-    // Touch support for mobile
-    draggableSwitches.forEach(sw => {
-        sw.addEventListener('touchstart', handleTouchStart, { passive: false });
-        sw.addEventListener('touchmove', handleTouchMove, { passive: false });
-        sw.addEventListener('touchend', handleTouchEnd);
+        zone.onclick = handleDropZoneClick;
     });
 
     // Submit button
@@ -1253,130 +1027,43 @@ function setupQuizEventListeners() {
     restartBtn.addEventListener('click', initQuiz);
 }
 
-// Drag and drop handlers
-let draggedElement = null;
+// Click Selection Handlers
+let selectedSwitchElement = null;
 
-function handleDragStart(e) {
-    draggedElement = e.currentTarget;
-    e.currentTarget.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
-    playSound('pick');
-}
+function handleSwitchClick(e) {
+    if (quizState.answered) return;
+    const sw = e.currentTarget;
+    if (sw.classList.contains('used')) return;
 
-function handleDragEnd(e) {
-    e.currentTarget.classList.remove('dragging');
-}
-
-function handleDragOver(e) {
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
-    e.dataTransfer.dropEffect = 'move';
-    e.currentTarget.classList.add('drag-over');
-    return false;
-}
-
-function handleDragLeave(e) {
-    e.currentTarget.classList.remove('drag-over');
-}
-
-function handleDrop(e) {
-    if (e.stopPropagation) {
-        e.stopPropagation();
-    }
-    e.preventDefault();
-
-    e.currentTarget.classList.remove('drag-over');
-
-    if (draggedElement && !quizState.answered) {
-        const value = draggedElement.getAttribute('data-value');
-        const dropZone = e.currentTarget;
-        processDrop(dropZone, value, draggedElement.innerHTML);
-
-        // Mark the dragged switch as used
-        draggedElement.classList.add('used');
-        draggedElement.setAttribute('draggable', 'false');
-    }
-
-    return false;
-}
-
-// Touch Event Handlers
-let touchClone = null;
-let touchOffsetX = 0;
-let touchOffsetY = 0;
-
-function handleTouchStart(e) {
-    if (e.target.closest('.used')) return;
-
-    draggedElement = e.currentTarget;
-    const touch = e.touches[0];
-    const rect = draggedElement.getBoundingClientRect();
-
-    touchOffsetX = touch.clientX - rect.left;
-    touchOffsetY = touch.clientY - rect.top;
-
-    // Create visual clone for dragging
-    touchClone = draggedElement.cloneNode(true);
-    touchClone.style.position = 'fixed';
-    touchClone.style.left = rect.left + 'px';
-    touchClone.style.top = rect.top + 'px';
-    touchClone.style.width = rect.width + 'px';
-    touchClone.style.zIndex = '1000';
-    touchClone.style.pointerEvents = 'none';
-    touchClone.style.opacity = '0.8';
-    touchClone.classList.add('dragging');
-    document.body.appendChild(touchClone);
-
-    draggedElement.classList.add('dragging');
-    playSound('pick');
-}
-
-function handleTouchMove(e) {
-    if (!touchClone) return;
-    e.preventDefault(); // Prevent scrolling
-
-    const touch = e.touches[0];
-    touchClone.style.left = (touch.clientX - touchOffsetX) + 'px';
-    touchClone.style.top = (touch.clientY - touchOffsetY) + 'px';
-
-    // Highlight drop zones
-    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-    const dropZone = elementBelow ? elementBelow.closest('.drop-zone-box') : null;
-
-    document.querySelectorAll('.drop-zone-box').forEach(zone => {
-        zone.classList.remove('drag-over');
-    });
-
-    if (dropZone) {
-        dropZone.classList.add('drag-over');
+    // Toggle selection
+    if (selectedSwitchElement === sw) {
+        deselectSwitch();
+    } else {
+        if (selectedSwitchElement) deselectSwitch();
+        selectedSwitchElement = sw;
+        sw.classList.add('selected');
+        playSound('pick');
     }
 }
 
-function handleTouchEnd(e) {
-    if (!touchClone) return;
-
-    const touch = e.changedTouches[0];
-    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-    const dropZone = elementBelow ? elementBelow.closest('.drop-zone-box') : null;
-
-    if (dropZone && draggedElement && !quizState.answered) {
-        const value = draggedElement.getAttribute('data-value');
-        processDrop(dropZone, value, draggedElement.innerHTML);
-
-        draggedElement.classList.add('used');
-        // Disable touch events for this element essentially
-        draggedElement.style.pointerEvents = 'none';
+function deselectSwitch() {
+    if (selectedSwitchElement) {
+        selectedSwitchElement.classList.remove('selected');
+        selectedSwitchElement = null;
     }
+}
 
-    // Cleanup
-    document.body.removeChild(touchClone);
-    touchClone = null;
-    draggedElement.classList.remove('dragging');
-    document.querySelectorAll('.drop-zone-box').forEach(zone => {
-        zone.classList.remove('drag-over');
-    });
+function handleDropZoneClick(e) {
+    if (!selectedSwitchElement || quizState.answered) return;
+
+    const dropZone = e.currentTarget;
+    const value = selectedSwitchElement.getAttribute('data-value');
+    processDrop(dropZone, value, selectedSwitchElement.innerHTML);
+
+    selectedSwitchElement.classList.add('used');
+    selectedSwitchElement.style.pointerEvents = 'none'; // Disable interactions
+
+    deselectSwitch();
 }
 
 // Common Drop Processing
