@@ -20,7 +20,7 @@
         <header class="header">
             <h1 class="title">مبادئ رقمية</h1>
             <p class="subtitle">أتقن المنطق الرقمي من خلال التجربة التفاعلية</p>
-            <p class="creator-credit">تحت الانشاء بواسطة امير علي</p>
+            <p class="creator-credit">تم الانشاء بواسطة امير علي</p>
             <p class="creator-credit">بإشراف د. مهند الحلبوسي</p>
         </header>
 
@@ -33,6 +33,10 @@
             <button class="tab-btn" data-tab="converter">
                 <span class="tab-icon">🔢</span>
                 <span class="tab-label">محول الأنظمة العددية</span>
+            </button>
+            <button class="tab-btn" data-tab="quiz">
+                <span class="tab-icon">🎯</span>
+                <span class="tab-label">اختبر معلوماتك</span>
             </button>
         </nav>
 
@@ -371,8 +375,147 @@
             </section>
         </main>
 
+        <!-- Quiz Tab Content -->
+        <main class="main-content tab-content" id="quiz-tab">
+            <!-- Quiz Header -->
+            <section class="quiz-header glass-card">
+                <h2 class="section-title">🎯 اختبر معلوماتك في البوابات المنطقية</h2>
+                <p class="quiz-description">اسحب المفاتيح (ON/OFF) إلى المدخلات الصحيحة للحصول على الناتج المطلوب!</p>
+                <div class="quiz-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">السؤال</span>
+                        <span class="stat-value" id="question-number">1</span>
+                        <span class="stat-total">/ 20</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">النتيجة</span>
+                        <span class="stat-value" id="score">0</span>
+                        <span class="stat-total">/ 20</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">الدقة</span>
+                        <span class="stat-value" id="accuracy">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Question -->
+            <section class="quiz-question-panel glass-card">
+                <div class="question-content">
+                    <div class="gate-display-quiz">
+                        <svg class="gate-svg-quiz" id="quiz-gate-svg" viewBox="0 0 200 150">
+                            <!-- Gate SVG will be dynamically generated -->
+                        </svg>
+                        <div class="gate-name-quiz" id="quiz-gate-name">AND</div>
+                    </div>
+
+                    <div class="required-output">
+                        <h3>الناتج المطلوب:</h3>
+                        <div class="output-display-quiz" id="quiz-required-output">
+                            <span class="output-value-large">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drag and Drop Area -->
+                <div class="quiz-interactive-area">
+                    <div class="inputs-drag-area">
+                        <div class="input-drop-zone" data-input="A">
+                            <div class="drop-zone-label">Input A</div>
+                            <div class="drop-zone-box" id="drop-zone-a" data-value="">
+                                <span class="drop-placeholder">اسحب هنا</span>
+                            </div>
+                        </div>
+
+                        <div class="input-drop-zone" data-input="B">
+                            <div class="drop-zone-label">Input B</div>
+                            <div class="drop-zone-box" id="drop-zone-b" data-value="">
+                                <span class="drop-placeholder">اسحب هنا</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="draggable-switches">
+                        <h3>اسحب المفاتيح:</h3>
+                        <div class="switches-container">
+                            <div class="draggable-switch" draggable="true" data-value="0">
+                                <div class="switch-visual off">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">OFF (0)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="0">
+                                <div class="switch-visual off">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">OFF (0)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="1">
+                                <div class="switch-visual on">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">ON (1)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="1">
+                                <div class="switch-visual on">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">ON (1)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="submit-answer-btn" id="submit-answer-btn">
+                    <span>تحقق من الإجابة</span>
+                    <span class="btn-icon">✓</span>
+                </button>
+
+                <!-- Feedback Section -->
+                <div class="feedback-section" id="feedback-section" style="display: none;">
+                    <div class="feedback-content" id="feedback-content">
+                        <!-- Feedback will be shown here -->
+                    </div>
+                    <button class="next-question-btn" id="next-question-btn">
+                        <span>السؤال التالي</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Quiz Results (shown at the end) -->
+            <section class="quiz-results glass-card" id="quiz-results" style="display: none;">
+                <h2 class="section-title">🎉 انتهى الاختبار!</h2>
+                <div class="results-summary">
+                    <div class="result-stat">
+                        <div class="result-icon">✓</div>
+                        <div class="result-label">إجابات صحيحة</div>
+                        <div class="result-value" id="correct-answers">0</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-icon">✗</div>
+                        <div class="result-label">إجابات خاطئة</div>
+                        <div class="result-value" id="wrong-answers">0</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-icon">%</div>
+                        <div class="result-label">النسبة المئوية</div>
+                        <div class="result-value" id="final-percentage">0%</div>
+                    </div>
+                </div>
+                <div class="performance-message" id="performance-message">
+                    <!-- Performance message will be shown here -->
+                </div>
+                <button class="restart-quiz-btn" id="restart-quiz-btn">
+                    <span>ابدأ من جديد</span>
+                    <span class="btn-icon">🔄</span>
+                </button>
+            </section>
+        </main>
+
         <footer class="footer">
-            <p>تحت الانشاء بواسطة امير علي</p>
+            <p>تم الانشاء بواسطة امير علي</p>
             <p>بإشراف د. مهند الحلبوسي</p>
             <div class="social-links">
                 <a href="https://t.me/sytus" target="_blank" rel="noopener noreferrer" class="social-link">
