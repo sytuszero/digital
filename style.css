@@ -2077,6 +2077,44 @@ body::before {
     color: var(--text-secondary);
 }
 
+/* Selected State for Switch */
+.draggable-switch.selected {
+    border-color: var(--accent-primary);
+    background: hsla(280, 85%, 65%, 0.1);
+    box-shadow: 0 0 15px hsla(280, 85%, 65%, 0.4);
+    transform: scale(1.05);
+}
+
+/* Target Animation for Drop Zones when Selection is Active */
+.quiz-interactive-area.selection-active .drop-zone-box {
+    animation: targetPulse 1.5s infinite;
+    cursor: pointer;
+    border-color: var(--accent-primary) !important;
+    background: hsla(280, 85%, 65%, 0.05);
+}
+
+.quiz-interactive-area.selection-active .drop-zone-box:hover {
+    background: hsla(280, 85%, 65%, 0.15);
+    box-shadow: 0 0 20px hsla(280, 85%, 65%, 0.4);
+}
+
+@keyframes targetPulse {
+    0% {
+        border-color: var(--glass-border);
+        box-shadow: 0 0 0 transparent;
+    }
+
+    50% {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 15px hsla(280, 85%, 65%, 0.3);
+    }
+
+    100% {
+        border-color: var(--glass-border);
+        box-shadow: 0 0 0 transparent;
+    }
+}
+
 /* Dropped Switch in Zone */
 .dropped-switch {
     display: flex;
