@@ -1193,7 +1193,7 @@ function checkAnswer() {
         playSound('wrong');
     }
 
-    feedbackSection.style.display = 'block';
+    feedbackSection.style.display = 'flex';
 
     // Update stats
     document.getElementById('score').textContent = quizState.score;
@@ -1206,6 +1206,9 @@ function checkAnswer() {
 
 // Next question
 function nextQuestion() {
+    // Hide feedback modal
+    document.getElementById('feedback-section').style.display = 'none';
+
     quizState.currentQuestion++;
 
     if (quizState.currentQuestion >= quizState.totalQuestions) {
