@@ -1822,23 +1822,25 @@ body::before {
     position: relative;
 }
 
-.question-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
+/* Unified Quiz Question Display */
+.question-content-centered {
+    display: flex;
+    justify-content: center;
     margin-bottom: var(--spacing-xl);
-    align-items: center;
 }
 
 .gate-display-quiz {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-lg);
+    gap: var(--spacing-xl);
+    /* Connected look */
+    padding: var(--spacing-xl);
     background: var(--bg-tertiary);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     border: 2px solid var(--glass-border);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .gate-svg-quiz {
@@ -1857,11 +1859,44 @@ body::before {
     border-radius: var(--radius-md);
 }
 
-.required-output {
+@media (max-width: 768px) {
+    .gate-display-quiz {
+        flex-direction: column;
+        padding: var(--spacing-lg);
+    }
+}
+
+.gate-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    z-index: 2;
+}
+
+.required-output-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    z-index: 2;
+    padding-left: var(--spacing-md);
+    border-left: 2px dashed var(--glass-border);
+    /* Subtle separation or remove if wanting pure wire */
+    margin-left: 0;
+}
+
+/* Override previous if distinct separation isn't wanted, but wire does the job */
+.required-output-container {
+    border: none;
+    padding-left: 0;
+}
+
+.output-label-quiz {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-family: 'Alexandria', sans-serif;
+    margin-bottom: var(--spacing-xs);
 }
 
 .required-output h3 {
@@ -2648,24 +2683,28 @@ body::before {
     }
 
     .gate-svg-quiz {
-        width: 120px;
-        height: 90px;
+        width: 100px;
+        height: 75px;
     }
 
     .gate-name-quiz {
-        font-size: 1.2rem;
-        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: 1rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .output-label-quiz {
+        font-size: 0.85rem;
     }
 
     /* Compact output display */
     .output-display-quiz {
-        width: 80px;
-        height: 80px;
-        border-width: 3px;
+        width: 60px;
+        height: 60px;
+        border-width: 2px;
     }
 
     .output-value-large {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .required-output h3 {
