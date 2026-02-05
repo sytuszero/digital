@@ -401,18 +401,22 @@
 
             <!-- Quiz Question -->
             <section class="quiz-question-panel glass-card">
-                <div class="question-content">
+                <div class="question-content-centered">
                     <div class="gate-display-quiz">
-                        <svg class="gate-svg-quiz" id="quiz-gate-svg" viewBox="0 0 200 150">
-                            <!-- Gate SVG will be dynamically generated -->
-                        </svg>
-                        <div class="gate-name-quiz" id="quiz-gate-name">AND</div>
-                    </div>
+                        <div class="gate-wrapper">
+                            <svg class="gate-svg-quiz" id="quiz-gate-svg" viewBox="0 0 200 150">
+                                <!-- Gate SVG will be dynamically generated -->
+                            </svg>
+                            <div class="gate-name-quiz" id="quiz-gate-name">AND</div>
+                        </div>
 
-                    <div class="required-output">
-                        <h3>الناتج المطلوب:</h3>
-                        <div class="output-display-quiz" id="quiz-required-output">
-                            <span class="output-value-large">1</span>
+                        <!-- Wire removed as per request -->
+
+                        <div class="required-output-container">
+                            <h3 class="output-label-quiz">الناتج المطلوب</h3>
+                            <div class="output-display-quiz" id="quiz-required-output">
+                                <span class="output-value-large">1</span>
+                            </div>
                         </div>
                     </div>
                 </div>
