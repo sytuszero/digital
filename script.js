@@ -1035,6 +1035,8 @@ function handleSwitchClick(e) {
     const sw = e.currentTarget;
     if (sw.classList.contains('used')) return;
 
+    const interactiveArea = document.querySelector('.quiz-interactive-area');
+
     // Toggle selection
     if (selectedSwitchElement === sw) {
         deselectSwitch();
@@ -1042,11 +1044,15 @@ function handleSwitchClick(e) {
         if (selectedSwitchElement) deselectSwitch();
         selectedSwitchElement = sw;
         sw.classList.add('selected');
+        if (interactiveArea) interactiveArea.classList.add('selection-active');
         playSound('pick');
     }
 }
 
 function deselectSwitch() {
+    const interactiveArea = document.querySelector('.quiz-interactive-area');
+    if (interactiveArea) interactiveArea.classList.remove('selection-active');
+
     if (selectedSwitchElement) {
         selectedSwitchElement.classList.remove('selected');
         selectedSwitchElement = null;
@@ -1057,8 +1063,26 @@ function handleDropZoneClick(e) {
     if (!selectedSwitchElement || quizState.answered) return;
 
     const dropZone = e.currentTarget;
+
+    // Check if there is already a switch in this drop zone
+    if (dropZone.hasAttribute('data-source-id')) {
+        const oldSwitchId = dropZone.getAttribute('data-source-id');
+        const oldSwitch = document.getElementById(oldSwitchId);
+        if (oldSwitch) {
+            // Return the old switch to the pool
+            oldSwitch.classList.remove('used');
+            oldSwitch.style.pointerEvents = 'auto';
+        }
+    }
+
     const value = selectedSwitchElement.getAttribute('data-value');
-    processDrop(dropZone, value, selectedSwitchElement.innerHTML);
+
+    // Assign a unique ID to the source switch if it doesn't have one
+    if (!selectedSwitchElement.id) {
+        selectedSwitchElement.id = 'switch-' + Date.now() + Math.random().toString(36).substr(2, 9);
+    }
+
+    processDrop(dropZone, value, selectedSwitchElement.innerHTML, selectedSwitchElement.id);
 
     selectedSwitchElement.classList.add('used');
     selectedSwitchElement.style.pointerEvents = 'none'; // Disable interactions
@@ -1067,7 +1091,7 @@ function handleDropZoneClick(e) {
 }
 
 // Common Drop Processing
-function processDrop(dropZone, value, innerHTML) {
+function processDrop(dropZone, value, innerHTML, sourceId) {
     // Clear previous content
     dropZone.innerHTML = '';
 
@@ -1077,8 +1101,12 @@ function processDrop(dropZone, value, innerHTML) {
     switchClone.innerHTML = innerHTML;
     dropZone.appendChild(switchClone);
 
-    // Set the value
+    // Set the value and source ID
     dropZone.setAttribute('data-value', value);
+    if (sourceId) {
+        dropZone.setAttribute('data-source-id', sourceId);
+    }
+
     playSound('drop');
 }
 
