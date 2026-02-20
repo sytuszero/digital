@@ -3,6 +3,7 @@ const LOGIC_GATES = {
     AND: {
         name: 'AND',
         symbol: '∧',
+        formula: 'X = A · B',
         description: 'الناتج يكون 1 فقط عندما يكون كلا المدخلين 1',
         operation: (a, b) => a && b,
         inputs: 2
@@ -10,6 +11,7 @@ const LOGIC_GATES = {
     OR: {
         name: 'OR',
         symbol: '∨',
+        formula: 'X = A + B',
         description: 'الناتج يكون 1 عندما يكون أحد المدخلين على الأقل 1',
         operation: (a, b) => a || b,
         inputs: 2
@@ -17,6 +19,7 @@ const LOGIC_GATES = {
     NOT: {
         name: 'NOT',
         symbol: '¬',
+        formula: 'X = A\'',
         description: 'الناتج هو عكس المدخل A',
         operation: (a) => !a,
         inputs: 1
@@ -24,6 +27,7 @@ const LOGIC_GATES = {
     XOR: {
         name: 'XOR',
         symbol: '⊕',
+        formula: 'X = A ⊕ B',
         description: 'الناتج يكون 1 عندما يكون المدخلان مختلفين',
         operation: (a, b) => a !== b,
         inputs: 2
@@ -31,6 +35,7 @@ const LOGIC_GATES = {
     NAND: {
         name: 'NAND',
         symbol: '⊼',
+        formula: 'X = (A · B)\'',
         description: 'الناتج يكون 0 فقط عندما يكون كلا المدخلين 1',
         operation: (a, b) => !(a && b),
         inputs: 2
@@ -38,6 +43,7 @@ const LOGIC_GATES = {
     NOR: {
         name: 'NOR',
         symbol: '⊽',
+        formula: 'X = (A + B)\'',
         description: 'الناتج يكون 1 فقط عندما يكون كلا المدخلين 0',
         operation: (a, b) => !(a || b),
         inputs: 2
@@ -45,6 +51,7 @@ const LOGIC_GATES = {
     XNOR: {
         name: 'XNOR',
         symbol: '⊙',
+        formula: 'X = (A ⊕ B)\'',
         description: 'الناتج يكون 1 عندما يكون المدخلان متساويين',
         operation: (a, b) => a === b,
         inputs: 2
@@ -165,6 +172,7 @@ function updateGateDisplay() {
     drawGateSVG(currentGate);
     document.getElementById('gate-name-display').textContent = gate.name;
     gateDescription.textContent = gate.description;
+    document.getElementById('gate-formula').textContent = gate.formula;
 }
 
 function updateToggle(toggleElement, state) {
