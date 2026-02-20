@@ -2917,3 +2917,558 @@ body::before {
         grid-template-columns: 1fr;
     }
 }
+
+/* claymorphism.css - Calm Sage Theme */
+:root {
+    /* Calm Earthy Sage Palette - No glaring white, very relaxed */
+    --bg-primary: #D2DCD7 !important;
+    /* Soft muted sage/grey background */
+    --bg-card: #DBE3DF !important;
+    /* Slightly lighter sage for cards */
+    --bg-element: #C8D3CE !important;
+    /* Slightly darker for tabs/inputs */
+
+    /* Accents - Monochromatic & Earthy */
+    --accent-primary: #557065 !important;
+    /* Deep calming forest/sage green */
+    --accent-hover: #465E54 !important;
+    --accent-secondary: #748F83 !important;
+
+    /* Claymorphism shadows tailored to the sage background */
+    --clay-dark-shadow: rgba(150, 166, 159, 0.55);
+    --clay-light-shadow: rgba(255, 255, 255, 0.6);
+    --clay-inner-dark: rgba(150, 166, 159, 0.45);
+    --clay-inner-light: rgba(255, 255, 255, 0.4);
+
+    /* Text Colors - Soft, earthy and unified */
+    --text-primary: #2F3E37 !important;
+    /* Very dark sage */
+    --text-secondary: #455950 !important;
+    --text-muted: #6B8076 !important;
+
+    /* Gate Wires & Logic Toggles */
+    --color-off: #99ACA3 !important;
+    /* Muted slate/sage for off */
+    --color-on: #3D8C66 !important;
+    /* Earthy pleasing green for ON */
+    --color-wire-off: rgba(107, 128, 118, 0.4) !important;
+    --color-wire-on: #3D8C66 !important;
+
+    /* Base Clay Effect for Cards (Soft, plump look) */
+    --clay-box-shadow:
+        10px 10px 20px var(--clay-dark-shadow),
+        -8px -8px 16px var(--clay-light-shadow),
+        inset -3px -3px 8px var(--clay-inner-dark),
+        inset 3px 3px 8px var(--clay-inner-light) !important;
+
+    /* Base Clay Effect for Elements */
+    --clay-element-shadow:
+        6px 6px 14px var(--clay-dark-shadow),
+        -6px -6px 14px var(--clay-light-shadow),
+        inset -2px -2px 6px var(--clay-inner-dark),
+        inset 2px 2px 6px var(--clay-inner-light) !important;
+
+    --clay-element-hover:
+        8px 8px 18px var(--clay-dark-shadow),
+        -8px -8px 18px var(--clay-light-shadow),
+        inset -2px -2px 6px var(--clay-inner-dark),
+        inset 2px 2px 6px var(--clay-inner-light) !important;
+
+    --clay-element-active:
+        inset 5px 5px 12px var(--clay-inner-dark),
+        inset -5px -5px 12px var(--clay-inner-light) !important;
+
+    /* Button Shadows */
+    --clay-btn-shadow:
+        6px 6px 14px rgba(60, 80, 72, 0.3),
+        -4px -4px 10px rgba(255, 255, 255, 0.2),
+        inset -3px -3px 6px rgba(47, 62, 55, 0.3),
+        inset 3px 3px 6px rgba(255, 255, 255, 0.2) !important;
+
+    --clay-btn-hover:
+        8px 8px 16px rgba(60, 80, 72, 0.4),
+        -6px -6px 12px rgba(255, 255, 255, 0.2),
+        inset -3px -3px 6px rgba(47, 62, 55, 0.3),
+        inset 3px 3px 6px rgba(255, 255, 255, 0.2) !important;
+
+    --clay-btn-active:
+        inset 5px 5px 10px rgba(47, 62, 55, 0.4),
+        inset -5px -5px 10px rgba(255, 255, 255, 0.1) !important;
+
+    /* Spacing & Extra rounded corners for playfully chunky look */
+    --radius-sm: 14px !important;
+    --radius-md: 20px !important;
+    --radius-lg: 28px !important;
+    --radius-xl: 40px !important;
+}
+
+body {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+    transition: background 0.3s ease;
+}
+
+body::before {
+    display: none !important;
+}
+
+/* Remove all borders for clean clay look */
+* {
+    border-color: transparent !important;
+}
+
+/* CARDS */
+.glass-card,
+.step-card,
+.reference-card,
+.relations-map,
+.feedback-modal {
+    background: var(--bg-card) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--clay-box-shadow) !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* STANDARD ELEMENTS (Gates, Tabs, Unselected Switches) */
+.tab-btn,
+.gate-btn,
+.draggable-switch {
+    background: var(--bg-element) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--clay-element-shadow) !important;
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.swap-btn {
+    background: var(--bg-element) !important;
+    color: var(--text-primary) !important;
+    border-radius: 50% !important;
+    box-shadow: var(--clay-element-shadow) !important;
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+/* INSET ELEMENTS (Inputs, Drops, Displays, Togglers) */
+.base-select,
+.number-input,
+.result-display,
+.wire,
+.input-drop-zone,
+.gate-wrapper,
+.output-display-quiz,
+.visual-mapping,
+.division-steps,
+.truth-table,
+.switch-visual.off,
+.gate-box,
+.power-label {
+    background: var(--bg-card) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--clay-element-active) !important;
+    border: none !important;
+}
+
+.wire {
+    border-radius: 6px !important;
+}
+
+/* ACTION BUTTONS (Convert, Submit, Next) */
+.convert-btn,
+.submit-answer-btn,
+.next-question-btn,
+.restart-quiz-btn {
+    background: var(--accent-primary) !important;
+    color: white !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--clay-btn-shadow) !important;
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.convert-btn:hover,
+.submit-answer-btn:hover,
+.next-question-btn:hover,
+.restart-quiz-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: var(--clay-btn-hover) !important;
+    background: var(--accent-hover) !important;
+}
+
+.convert-btn:active,
+.submit-answer-btn:active,
+.next-question-btn:active,
+.restart-quiz-btn:active {
+    transform: translateY(2px) !important;
+    box-shadow: var(--clay-btn-active) !important;
+}
+
+/* Hover effects for Elements */
+.glass-card:hover,
+.reference-card:hover,
+.step-card:hover,
+.relations-map:hover {
+    transform: none !important;
+}
+
+.tab-btn:hover,
+.gate-btn:hover,
+.swap-btn:hover,
+.draggable-switch:hover {
+    box-shadow: var(--clay-element-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Element ACTIVE states */
+.tab-btn.active,
+.gate-btn.active,
+.swap-btn:active,
+.draggable-switch:active {
+    box-shadow: var(--clay-element-active) !important;
+    transform: translateY(2px) !important;
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+/* Colors for active */
+.tab-btn.active .tab-label,
+.tab-btn.active .tab-icon {
+    color: white !important;
+}
+
+.gate-btn.active .gate-name,
+.gate-btn.active .gate-icon-svg {
+    color: white !important;
+}
+
+/* Toggles and specific logic items */
+.toggle-btn {
+    border-radius: var(--radius-xl) !important;
+    background: var(--bg-card) !important;
+    box-shadow: var(--clay-element-active) !important;
+    border: none !important;
+    padding: 6px !important;
+}
+
+.toggle-slider {
+    background: var(--bg-element) !important;
+    box-shadow: var(--clay-element-shadow) !important;
+    border: none !important;
+}
+
+.toggle-btn[data-state="1"] .toggle-slider {
+    background: var(--color-on) !important;
+    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.3), inset -1px -1px 3px rgba(0, 0, 0, 0.1), 2px 2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.switch-visual {
+    border-radius: var(--radius-md) !important;
+}
+
+.switch-visual.on {
+    background: var(--color-on) !important;
+    box-shadow: var(--clay-element-shadow) !important;
+}
+
+.switch-toggle {
+    background: var(--bg-primary) !important;
+    box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.4), inset -1px -1px 2px rgba(0, 0, 0, 0.1), 1px 1px 4px rgba(0, 0, 0, 0.15) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+.switch-visual.off .switch-toggle {
+    background: var(--text-muted) !important;
+}
+
+/* Overrides */
+.relations-map * {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    box-shadow: none !important;
+}
+
+.relations-map .step-card,
+.relations-map .step-action {
+    background: var(--bg-card) !important;
+    box-shadow: var(--clay-box-shadow) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.relations-map h3,
+.relations-map .strategy-description,
+.strategy-label {
+    color: var(--text-primary) !important;
+}
+
+.title {
+    background: none !important;
+    color: var(--accent-primary) !important;
+    -webkit-text-fill-color: var(--accent-primary) !important;
+    text-shadow: 1px 1px 3px var(--clay-light-shadow), -1px -1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.section-title::before {
+    background: var(--accent-primary) !important;
+    box-shadow: 1px 1px 3px var(--clay-dark-shadow) !important;
+    border-radius: 4px !important;
+}
+
+.truth-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--clay-element-active) !important;
+}
+
+.truth-table th {
+    padding: 16px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    color: var(--accent-primary) !important;
+    background: var(--bg-element) !important;
+    border: none !important;
+    box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.05);
+    /* very soft depth for the header row */
+}
+
+.truth-table td {
+    padding: 16px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 600 !important;
+    color: var(--text-secondary) !important;
+    border: none !important;
+    background: var(--bg-card) !important;
+}
+
+.truth-table tr:not(:last-child) td {
+    border-bottom: 2px solid var(--clay-dark-shadow) !important;
+}
+
+/* Text overrides for readability in claymorphism */
+.step-title,
+.gate-group-title,
+.input-label,
+.output-label,
+.span.value-text {
+    color: var(--text-secondary) !important;
+}
+
+.gate-name-display,
+.gate-description {
+    color: var(--text-primary) !important;
+}
+
+.gate-formula {
+    margin-top: var(--spacing-sm);
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-primary) !important;
+    background: var(--bg-element) !important;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+
+/* Inputs override focus */
+.number-input:focus,
+.base-select:focus {
+    box-shadow: inset 6px 6px 12px var(--clay-inner-dark), inset -6px -6px 12px var(--clay-inner-light) !important;
+    outline: none !important;
+}
+
+/* Result flags */
+.result-value,
+.output-value-large,
+.step-num,
+.remainder,
+.arrow-icon {
+    color: var(--accent-primary) !important;
+    text-shadow: 1px 1px 2px var(--clay-light-shadow);
+    font-weight: 700 !important;
+}
+
+.drop-placeholder,
+.input-hint {
+    color: var(--text-muted) !important;
+}
+
+/* SVGs */
+.gate-svg,
+.gate-svg-quiz {
+    stroke: var(--text-primary) !important;
+}
+
+.footer p {
+    color: var(--text-primary) !important;
+}
+
+.footer a {
+    color: var(--accent-primary) !important;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    color: var(--accent-hover) !important;
+}
+
+/* ==================== MOBILE RESPONSIVENESS ==================== */
+@media (max-width: 900px) {
+
+    /* Simulator stacking */
+    .simulator-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+
+    .inputs-section {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .input-control {
+        align-items: center;
+    }
+
+    .wire {
+        width: 60px;
+        margin: 10px auto;
+        transform: rotate(90deg);
+    }
+
+    .output-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* General Spacing */
+    :root {
+        --spacing-lg: 1rem;
+        --spacing-xl: 1.5rem;
+    }
+
+    /* Typography */
+    .title {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    /* Navigation Tabs */
+    .tab-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tab-btn {
+        justify-content: center;
+        padding: var(--spacing-sm);
+    }
+
+    /* Converter Layout Stacking */
+    .converter-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .swap-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        transform: rotate(90deg);
+    }
+
+    .swap-btn {
+        margin: 0 auto;
+    }
+
+    /* Strategy Map / Steps */
+    .strategy-flow {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm) !important;
+    }
+
+    .strategy-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+
+    /* Result Displays */
+    .number-input,
+    .base-select,
+    .result-display {
+        font-size: 1rem;
+        padding: var(--spacing-sm);
+    }
+
+    /* Quiz Area */
+    .quiz-interactive-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inputs-drag-area {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+
+    .switches-container {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .convert-btn,
+    .submit-answer-btn {
+        width: 100%;
+        padding: var(--spacing-sm);
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Logic Gates wrap smaller */
+    .gate-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .gate-btn {
+        padding: var(--spacing-xs);
+    }
+
+    .gate-icon-svg {
+        width: 40px;
+        height: 30px;
+    }
+
+    .gate-name {
+        font-size: 0.8rem;
+    }
+
+    /* Tables */
+    .truth-table th,
+    .truth-table td {
+        padding: 8px !important;
+        font-size: 0.9rem !important;
+    }
+}
