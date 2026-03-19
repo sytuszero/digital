@@ -178,7 +178,7 @@
                     <!-- Input Controls -->
                     <div class="inputs-section">
                         <div class="input-control" id="input-a-control">
-                            <label class="input-label">Input A</label>
+                            <label class="input-label" for="toggle-a">Input A</label>
                             <label class="ux-vault-toggle">
                                 <input type="checkbox" class="ux-vault-toggle__input" id="toggle-a">
                                 <div class="ux-vault-toggle__wrapper">
@@ -218,7 +218,7 @@
                         </div>
 
                         <div class="input-control" id="input-b-control">
-                            <label class="input-label">Input B</label>
+                            <label class="input-label" for="toggle-b">Input B</label>
                             <label class="ux-vault-toggle">
                                 <input type="checkbox" class="ux-vault-toggle__input" id="toggle-b">
                                 <div class="ux-vault-toggle__wrapper">
@@ -315,13 +315,14 @@
                 <div class="converter-layout">
                     <!-- From Section -->
                     <div class="converter-section">
-                        <label class="converter-label">من (From)</label>
+                        <label class="converter-label" for="from-base">من (From)</label>
                         <select id="from-base" class="base-select">
                             <option value="2">Binary (ثنائي)</option>
                             <option value="8">Octal (ثماني)</option>
                             <option value="10" selected>Decimal (عشري)</option>
                             <option value="16">Hexadecimal (سداسي عشر)</option>
                         </select>
+                        <label for="input-value" class="sr-only">أدخل الرقم للتحويل</label>
                         <input type="text" id="input-value" class="number-input" placeholder="أدخل الرقم">
                         <span class="input-hint" id="input-hint">Base 10 (0-9)</span>
                     </div>
@@ -335,7 +336,7 @@
 
                     <!-- To Section -->
                     <div class="converter-section">
-                        <label class="converter-label">إلى (To)</label>
+                        <label class="converter-label" for="to-base">إلى (To)</label>
                         <select id="to-base" class="base-select">
                             <option value="2" selected>Binary (ثنائي)</option>
                             <option value="8">Octal (ثماني)</option>
