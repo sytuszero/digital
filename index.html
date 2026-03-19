@@ -14,16 +14,11 @@
         rel="stylesheet">
     <link rel="stylesheet" href="tokyo.css">
     
-    <script>
-        // Only run Service Worker logic if not on file:// protocol (avoids SecurityError)
-        if (location.protocol !== 'file:' && 'serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
-                }
-            });
-        }
-    </script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1b26">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body>
