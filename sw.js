@@ -1,8 +1,8 @@
-const CACHE_NAME = 'digital-logic-v2';
+const CACHE_NAME = 'digital-logic-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './style.css',
+  './tokyo.css',
   './script.js',
   './manifest.json',
   'https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap'
