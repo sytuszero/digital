@@ -2973,13 +2973,13 @@ body::before {
 .ux-circuit--off {
     stroke: var(--color-amber);
     stroke-dashoffset: 0;
-    opacity: 0.4;
+    opacity: 0.8;
 }
 
 .ux-circuit--on {
     stroke: var(--color-emerald);
     stroke-dashoffset: 100;
-    opacity: 0.4;
+    opacity: 0;
 }
 
 .ux-vault-toggle__status {
