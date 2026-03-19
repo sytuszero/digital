@@ -1,17 +1,18 @@
 // ==================== LOGIC GATE DEFINITIONS ====================
-// Service Worker Registration (Disabled for restyling)
-/*
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then((registration) => {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, (err) => {
-        console.log('ServiceWorker registration failed: ', err);
+  // Only attempt registration if it's not a local file:// to avoid console spam during local dev
+  if (location.protocol !== 'file:') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, (err) => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
       });
-  });
+  }
 }
-*/
 
 const LOGIC_GATES = {
     AND: {
