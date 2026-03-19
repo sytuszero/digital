@@ -1,4 +1,4 @@
-const CACHE_NAME = 'digital-logic-v3';
+const CACHE_NAME = 'digital-logic-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
+  self.skipWaiting(); // Force active immediately
 });
 
 // Activate Event
@@ -32,6 +33,7 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+  self.clients.claim(); // Take control of all open clients immediately
 });
 
 // Fetch Event
