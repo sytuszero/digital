@@ -2050,6 +2050,7 @@ body::before {
     border-radius: 20px;
     position: relative;
     transition: all var(--transition-normal);
+    cursor: pointer;
 }
 
 .switch-visual.off {
