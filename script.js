@@ -298,6 +298,11 @@ function switchTab(tabName) {
         targetTab.classList.add('active');
         // Scroll to top of main content when switching
         document.querySelector('.main-body')?.scrollTo(0, 0);
+
+        // Initialize quiz if needed
+        if (tabName === 'quiz' && quizState.questions.length === 0) {
+            initQuiz();
+        }
     }
 }
 
@@ -1430,18 +1435,8 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
     updateHints();
 
-    // Initialize quiz when quiz tab is opened
-    const quizTabBtn = document.querySelector('[data-tab="quiz"]');
-    if (quizTabBtn) {
-        quizTabBtn.addEventListener('click', () => {
-            // Small delay to ensure tab is visible
-            setTimeout(() => {
-                if (quizState.questions.length === 0) {
-                    initQuiz();
-                }
-            }, 100);
-        });
-    }
+    // The quiz is now initialized via the switchTab function
+    // when the radio-group input changes.
 
     // Unlock Audio Context on interaction
     document.addEventListener('click', () => {
