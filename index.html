@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="مبادئ رقمية - تعلم البوابات المنطقية وتحويل الأنظمة العددية من خلال التجربة العملية التفاعلية">
+    <title>مبادئ رقمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="tokyo.css">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1b26">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">مبادئ رقمية</h1>
+            <p class="subtitle">أتقن المنطق الرقمي من خلال التجربة التفاعلية</p>
+            <p class="creator-credit">تم الانشاء بواسطة امير علي</p>
+            <p class="creator-credit">بإشراف د. مهند الحلبوسي</p>
+        </header>
+
+        <!-- Tab Navigation (Slider Style) -->
+        <nav class="radio-group tab-navigation" dir="rtl">
+            <div class="slider"></div>
+            <div class="radio-option">
+                <input type="radio" name="tab-option" id="tab-gates" value="gates" checked />
+                <label for="tab-gates" class="radio-label">
+                    <span class="tab-icon">⚡</span>
+                    <span class="tab-text">البوابات</span>
+                </label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="tab-option" id="tab-flipflops" value="flipflops" />
+                <label for="tab-flipflops" class="radio-label">
+                    <span class="tab-icon">🔄</span>
+                    <span class="tab-text">flip flop</span>
+                </label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="tab-option" id="tab-converter" value="converter" />
+                <label for="tab-converter" class="radio-label">
+                    <span class="tab-icon">🔢</span>
+                    <span class="tab-text">محول الأنظمة العددية</span>
+                </label>
+            </div>
+            <div class="radio-option">
+                <input type="radio" name="tab-option" id="tab-quiz" value="quiz" />
+                <label for="tab-quiz" class="radio-label">
+                    <span class="tab-icon">🎯</span>
+                    <span class="tab-text">اختبر معلوماتك</span>
+                </label>
+            </div>
+        </nav>
+
+        <!-- Gates Tab Content -->
+        <main class="main-content tab-content active" id="gates-tab">
+            <!-- Gate Selection Panel -->
+            <section class="gate-selector-panel glass-card" dir="rtl">
+                <h2 class="section-title">اختر البوابة المنطقية</h2>
+
+                <!-- Basic Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات الأساسية</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn active" data-gate="AND">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="140" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">AND</span>
+                        </button>
+                        <button class="gate-btn" data-gate="OR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="110" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">OR</span>
+                        </button>
+                        <button class="gate-btn" data-gate="NOT">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 50 120 L 130 75 Z" fill="none" />
+                                <circle cx="140" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="75" x2="50" y2="75" />
+                                <line x1="150" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NOT</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inverted Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات المعكوسة (NOT + Basic)</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn" data-gate="NAND">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 50 30 L 100 30 Q 140 30 140 75 Q 140 120 100 120 L 50 120 L 50 30 Z"
+                                    fill="none" />
+                                <circle cx="150" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="160" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NAND</span>
+                        </button>
+                        <button class="gate-btn" data-gate="NOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <circle cx="120" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="130" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">NOR</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Special Gates Group -->
+                <div class="gate-group">
+                    <h3 class="gate-group-title">البوابات الخاصة</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn" data-gate="XOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 40 30 Q 50 75 40 120" fill="none" />
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="110" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">XOR</span>
+                        </button>
+                        <button class="gate-btn" data-gate="XNOR">
+                            <svg class="gate-icon-svg" viewBox="0 0 200 150" fill="none" stroke="currentColor"
+                                stroke-width="3">
+                                <path d="M 40 30 Q 50 75 40 120" fill="none" />
+                                <path
+                                    d="M 50 30 Q 70 30 85 45 Q 100 60 110 75 Q 100 90 85 105 Q 70 120 50 120 Q 60 75 50 30 Z"
+                                    fill="none" />
+                                <circle cx="120" cy="75" r="10" fill="none" />
+                                <line x1="20" y1="55" x2="50" y2="55" />
+                                <line x1="20" y1="95" x2="50" y2="95" />
+                                <line x1="130" y1="75" x2="170" y2="75" />
+                            </svg>
+                            <span class="gate-name">XNOR</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Simulator -->
+            <section class="simulator-panel glass-card">
+                <h2 class="section-title">المحاكي التفاعلي</h2>
+
+                <div class="simulator-content">
+                    <!-- Input Controls -->
+                    <div class="inputs-section">
+                        <div class="input-control" id="input-a-control">
+                            <label class="input-label" for="toggle-a">Input A</label>
+                            <label class="ux-vault-toggle">
+                                <input type="checkbox" class="ux-vault-toggle__input" id="toggle-a">
+                                <div class="ux-vault-toggle__wrapper">
+                                    <svg class="ux-vault-toggle__filter" width="0" height="0">
+                                        <defs>
+                                            <filter id="ux-metal-noise">
+                                                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" result="noise"></feTurbulence>
+                                                <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.12 0" in="noise" result="coloredNoise"></feColorMatrix>
+                                                <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite"></feComposite>
+                                                <feBlend mode="multiply" in="composite" in2="SourceGraphic"></feBlend>
+                                            </filter>
+                                        </defs>
+                                    </svg>
+                                    <div class="ux-vault-toggle__track">
+                                        <div class="ux-vault-toggle__texture"></div>
+                                        <svg class="ux-vault-toggle__circuit" viewBox="0 0 140 60">
+                                            <path d="M 35 30 L 60 30 L 75 18 L 115 18" class="ux-circuit-path ux-circuit--off"></path>
+                                            <path d="M 25 42 L 65 42 L 80 30 L 105 30" class="ux-circuit-path ux-circuit--on"></path>
+                                        </svg>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--off">
+                                            <span style="--i:1">O</span><span style="--i:2">F</span><span style="--i:3">F</span>
+                                        </div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--on">
+                                            <span style="--i:1">O</span><span style="--i:2">N</span>
+                                        </div>
+                                    </div>
+                                    <div class="ux-vault-toggle__thumb">
+                                        <div class="ux-vault-toggle__thumb-ring"></div>
+                                        <div class="ux-vault-toggle__thumb-core">
+                                            <span class="ux-thumb-value"></span>
+                                        </div>
+                                        <div class="ux-vault-toggle__thumb-glare"></div>
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="wire wire-a" data-state="0"></div>
+                        </div>
+
+                        <div class="input-control" id="input-b-control">
+                            <label class="input-label" for="toggle-b">Input B</label>
+                            <label class="ux-vault-toggle">
+                                <input type="checkbox" class="ux-vault-toggle__input" id="toggle-b">
+                                <div class="ux-vault-toggle__wrapper">
+                                    <svg class="ux-vault-toggle__filter" width="0" height="0">
+                                        <defs>
+                                            <filter id="ux-metal-noise-b">
+                                                <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" result="noise"></feTurbulence>
+                                                <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.12 0" in="noise" result="coloredNoise"></feColorMatrix>
+                                                <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite"></feComposite>
+                                                <feBlend mode="multiply" in="composite" in2="SourceGraphic"></feBlend>
+                                            </filter>
+                                        </defs>
+                                    </svg>
+                                    <div class="ux-vault-toggle__track">
+                                        <div class="ux-vault-toggle__texture"></div>
+                                        <svg class="ux-vault-toggle__circuit" viewBox="0 0 140 60">
+                                            <path d="M 35 30 L 60 30 L 75 18 L 115 18" class="ux-circuit-path ux-circuit--off"></path>
+                                            <path d="M 25 42 L 65 42 L 80 30 L 105 30" class="ux-circuit-path ux-circuit--on"></path>
+                                        </svg>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--off">
+                                            <span style="--i:1">O</span><span style="--i:2">F</span><span style="--i:3">F</span>
+                                        </div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--on">
+                                            <span style="--i:1">O</span><span style="--i:2">N</span>
+                                        </div>
+                                    </div>
+                                    <div class="ux-vault-toggle__thumb">
+                                        <div class="ux-vault-toggle__thumb-ring"></div>
+                                        <div class="ux-vault-toggle__thumb-core">
+                                            <span class="ux-thumb-value"></span>
+                                        </div>
+                                        <div class="ux-vault-toggle__thumb-glare"></div>
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="wire wire-b" data-state="0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Gate Visualization -->
+                    <div class="gate-display">
+                        <div class="gate-box">
+                            <svg class="gate-svg" id="gate-svg" viewBox="0 0 200 150"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- SVG will be dynamically generated by JavaScript -->
+                            </svg>
+                            <div class="gate-name-display" id="gate-name-display">AND</div>
+                            <div class="gate-description" id="gate-description">
+                                Output is 1 only when both inputs are 1
+                            </div>
+                            <div class="gate-formula" id="gate-formula" dir="ltr">X = A · B</div>
+                        </div>
+                    </div>
+
+                    <!-- Output Display -->
+                    <div class="output-section">
+                        <div class="wire wire-output" data-state="0"></div>
+                        <div class="output-display">
+                            <span class="output-label">Output</span>
+                            <div class="output-value" id="output-value" data-state="0">
+                                <span class="value-text">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Truth Table -->
+            <section class="truth-table-panel glass-card">
+                <h2 class="section-title">الاحتمالات (Truth Table)</h2>
+                <div class="table-container">
+                    <table class="truth-table" id="truth-table">
+                        <thead>
+                            <tr>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody id="truth-table-body">
+                            <!-- Generated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Flip-Flops Tab Content -->
+        <main class="main-content tab-content" id="flipflops-tab">
+            <!-- Selector Panel -->
+            <section class="gate-selector-panel glass-card" dir="rtl">
+                <h2 class="section-title">اختر القلاب (Flip-Flop / Latch)</h2>
+                
+                <div class="gate-group">
+                    <h3 class="gate-group-title">Latches (ممسكات)</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn flipflop-btn active" data-ff="SR_HIGH">
+                            <span class="gate-name">Active-HIGH S-R</span>
+                        </button>
+                        <button class="gate-btn flipflop-btn" data-ff="SR_LOW">
+                            <span class="gate-name">Active-LOW S-R</span>
+                        </button>
+                        <button class="gate-btn flipflop-btn" data-ff="D_LATCH">
+                            <span class="gate-name">Gated D Latch</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gate-group">
+                    <h3 class="gate-group-title">Flip-Flops (قلابات - Edge Triggered)</h3>
+                    <div class="gate-grid">
+                        <button class="gate-btn flipflop-btn" data-ff="JK_FF">
+                            <span class="gate-name">J-K Flip-Flop</span>
+                        </button>
+                        <button class="gate-btn flipflop-btn" data-ff="T_FF">
+                            <span class="gate-name">T (Toggle)</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Simulator -->
+            <section class="simulator-panel glass-card">
+                <h2 class="section-title">محاكي القلابات</h2>
+
+                <div class="simulator-content">
+                    <!-- Input Controls -->
+                    <div class="inputs-section">
+                        <!-- Top Input (S, J, D, T) -->
+                        <div class="input-control" id="ff-input-top-control">
+                            <label class="input-label" for="toggle-ff-top" id="label-ff-top">Input S</label>
+                            <label class="ux-vault-toggle">
+                                <input type="checkbox" class="ux-vault-toggle__input" id="toggle-ff-top">
+                                <div class="ux-vault-toggle__wrapper">
+                                    <div class="ux-vault-toggle__track">
+                                        <div class="ux-vault-toggle__texture"></div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--off">
+                                            <span style="--i:1">0</span>
+                                        </div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--on">
+                                            <span style="--i:1">1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ux-vault-toggle__thumb">
+                                        <div class="ux-vault-toggle__thumb-ring"></div>
+                                        <div class="ux-vault-toggle__thumb-core"></div>
+                                        <div class="ux-vault-toggle__thumb-glare"></div>
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="wire wire-ff-top" data-state="0"></div>
+                        </div>
+
+                        <!-- Clock/Enable Button -->
+                        <div class="clock-btn-container" id="ff-clock-control">
+                            <label class="input-label" id="label-ff-clock">CLK / En</label>
+                            <button class="clock-btn" id="btn-ff-clock">
+                                <span class="pulse-icon" id="clock-icon">⎍</span>
+                                <span class="clock-text">PULSE</span>
+                            </button>
+                        </div>
+
+                        <!-- Bottom Input (R, K) -->
+                        <div class="input-control" id="ff-input-bottom-control">
+                            <label class="input-label" for="toggle-ff-bottom" id="label-ff-bottom">Input R</label>
+                            <label class="ux-vault-toggle">
+                                <input type="checkbox" class="ux-vault-toggle__input" id="toggle-ff-bottom">
+                                <div class="ux-vault-toggle__wrapper">
+                                    <div class="ux-vault-toggle__track">
+                                        <div class="ux-vault-toggle__texture"></div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--off">
+                                            <span style="--i:1">0</span>
+                                        </div>
+                                        <div class="ux-vault-toggle__status ux-vault-toggle__status--on">
+                                            <span style="--i:1">1</span>
+                                        </div>
+                                    </div>
+                                    <div class="ux-vault-toggle__thumb">
+                                        <div class="ux-vault-toggle__thumb-ring"></div>
+                                        <div class="ux-vault-toggle__thumb-core"></div>
+                                        <div class="ux-vault-toggle__thumb-glare"></div>
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="wire wire-ff-bottom" data-state="0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Flip-Flop Display -->
+                    <div class="flipflop-display">
+                        <div class="flipflop-box">
+                            <div class="invalid-state-warning" id="invalid-warning">Invalid Condition!</div>
+                            <svg class="flipflop-svg" id="flipflop-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Dynamically generated -->
+                            </svg>
+                            <div class="gate-name-display" id="ff-name-display" style="margin-top: 10px;">Active-HIGH S-R</div>
+                        </div>
+                    </div>
+
+
+                    <!-- Action Explanation Log -->
+                    <div class="ff-action-log" id="ff-action-log" style="display:none;" dir="rtl">
+                        <div class="ff-log-header">
+                            <span class="ff-log-icon">💡</span>
+                            <span class="ff-log-title">ماذا حدث؟ (What Happened?)</span>
+                        </div>
+                        <div class="ff-log-body" id="ff-log-body"></div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Truth Table Image Match -->
+            <section class="truth-table-panel glass-card">
+                <h2 class="section-title">جدول الحقيقة (Truth Table)</h2>
+                <div class="table-container">
+                    <table class="truth-table" id="ff-truth-table">
+                        <!-- Generated by JS -->
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Converter Tab Content -->
+        <main class="main-content tab-content" id="converter-tab">
+            <!-- Number System Converter -->
+            <section class="converter-panel glass-card">
+                <h2 class="section-title">محول الأنظمة العددية</h2>
+
+                <div class="converter-layout">
+                    <!-- From Section -->
+                    <div class="converter-section">
+                        <label class="converter-label" for="from-base">من (From)</label>
+                        <select id="from-base" class="base-select">
+                            <option value="2">Binary (ثنائي)</option>
+                            <option value="8">Octal (ثماني)</option>
+                            <option value="10" selected>Decimal (عشري)</option>
+                            <option value="16">Hexadecimal (سداسي عشر)</option>
+                        </select>
+                        <label for="input-value" class="sr-only">أدخل الرقم للتحويل</label>
+                        <input type="text" id="input-value" class="number-input" placeholder="أدخل الرقم">
+                        <span class="input-hint" id="input-hint">Base 10 (0-9)</span>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <div class="swap-container">
+                        <button class="swap-btn" id="swap-btn" title="Swap">
+                            <span class="swap-icon">⇄</span>
+                        </button>
+                    </div>
+
+                    <!-- To Section -->
+                    <div class="converter-section">
+                        <label class="converter-label" for="to-base">إلى (To)</label>
+                        <select id="to-base" class="base-select">
+                            <option value="2" selected>Binary (ثنائي)</option>
+                            <option value="8">Octal (ثماني)</option>
+                            <option value="10">Decimal (عشري)</option>
+                            <option value="16">Hexadecimal (سداسي عشر)</option>
+                        </select>
+                        <div class="result-display" id="result-display">
+                            <span class="result-value" id="result-value">-</span>
+                        </div>
+                        <span class="input-hint" id="output-hint">Base 2 (0-1)</span>
+                    </div>
+                </div>
+
+                <button class="convert-btn" id="convert-btn">
+                    <span>عرض الخطوات التفصيلية</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </section>
+
+            <!-- Conversion Steps -->
+            <section class="steps-panel glass-card" id="steps-panel" style="display: none;">
+                <h2 class="section-title">خطوات التحويل التفصيلية</h2>
+                <div class="steps-content" id="steps-content">
+                    <!-- Steps will be generated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section class="reference-panel glass-card">
+                <h2 class="section-title">مرجع سريع</h2>
+                <div class="reference-grid">
+                    <div class="reference-card">
+                        <h3>Binary (Base 2)</h3>
+                        <p class="formula">Digits: 0-1</p>
+                        <p class="example">1101₂ = 1×2³ + 1×2² + 0×2¹ + 1×2⁰ = 13₁₀</p>
+                    </div>
+                    <div class="reference-card">
+                        <h3>Octal (Base 8)</h3>
+                        <p class="formula">Digits: 0-7</p>
+                        <p class="example">15₈ = 1×8¹ + 5×8⁰ = 13₁₀</p>
+                    </div>
+                    <div class="reference-card">
+                        <h3>Decimal (Base 10)</h3>
+                        <p class="formula">Digits: 0-9</p>
+                        <p class="example">13₁₀ = 1×10¹ + 3×10⁰</p>
+                    </div>
+                     <div class="reference-card">
+                         <h3>Hexadecimal (Base 16)</h3>
+                         <p class="formula">Digits: 0-9, A-F</p>
+                         <p class="example">D₁₆ = 13₁₀, 1F₁₆ = 31₁₀</p>
+                     </div>
+                </div>
+            </section>
+
+            <!-- Strategy Map (Arabic) - below مرجع سريع -->
+            <section class="glass-card">
+                <div class="relations-map"
+                    style="background: rgba(15, 23, 42, 0.95); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="margin: 0 0 1.5rem 0; font-size: 1.2rem; color: #fff; text-align: center;">🛣️ كيف تحل أي مسألة؟ (خارطة الحل)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="strategy-container">
+                            <div class="strategy-label">القاعدة الذهبية (The Golden Rule)</div>
+                            <p class="strategy-description">
+                                للتحويل بين أي نظامين، نستخدم <strong>النظام العشري</strong> كجسر (محطة عبور).
+                            </p>
+                            <div class="strategy-flow">
+                                <div class="strategy-step">
+                                    <div class="step-header">1. أي نظام</div>
+                                    <div class="step-card start">البداية (Source)<div class="step-action">استخدم الضرب (×)</div></div>
+                                </div>
+                                <div class="strategy-arrow"><div class="arrow-icon">➜</div></div>
+                                <div class="strategy-bridge">
+                                    <div class="bridge-title">10 (عشري)</div>
+                                    <div class="bridge-subtitle">الجسر (Bridge)</div>
+                                </div>
+                                <div class="strategy-arrow"><div class="arrow-icon arrow-red">➜</div></div>
+                                <div class="strategy-step">
+                                    <div class="step-header">2. النظام المطلوب</div>
+                                    <div class="step-card end">النهاية (Target)<div class="step-action action-red">استخدم القسمة (÷)</div></div>
+                                </div>
+                            </div>
+                            <div class="strategy-summary">
+                                <div class="summary-title">📝 ملخص الخطوات:</div>
+                                <div class="summary-text">
+                                    1. حول الرقم من نظامه الحالي إلى <strong>العشري</strong> (بالضرب).<br>
+                                    2. خذ النتيجة وحولها من العشري إلى <strong>النظام المطلوب</strong> (بالقسمة).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Quiz Tab Content -->
+        <main class="main-content tab-content" id="quiz-tab">
+            <!-- Quiz Header -->
+            <section class="quiz-header glass-card">
+                <h2 class="section-title">🎯 اختبر معلوماتك في البوابات المنطقية</h2>
+                <p class="quiz-description">اختر المفاتيح (ON/OFF) ثم اضغط على المدخل المناسب لوضعها!</p>
+                <div class="quiz-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">السؤال</span>
+                        <span class="stat-value" id="question-number">1</span>
+                        <span class="stat-total">/ 20</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">النتيجة</span>
+                        <span class="stat-value" id="score">0</span>
+                        <span class="stat-total">/ 20</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">الدقة</span>
+                        <span class="stat-value" id="accuracy">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Question -->
+            <section class="quiz-question-panel glass-card">
+                <div class="question-content-centered">
+                    <div class="gate-display-quiz">
+                        <div class="gate-wrapper">
+                            <svg class="gate-svg-quiz" id="quiz-gate-svg" viewBox="0 0 200 150">
+                                <!-- Gate SVG will be dynamically generated -->
+                            </svg>
+                            <div class="gate-name-quiz" id="quiz-gate-name">AND</div>
+                        </div>
+
+                        <!-- Wire removed as per request -->
+
+                        <div class="required-output-container">
+                            <h3 class="output-label-quiz">الناتج المطلوب</h3>
+                            <div class="output-display-quiz" id="quiz-required-output">
+                                <span class="output-value-large">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drag and Drop Area -->
+                <div class="quiz-interactive-area">
+                    <div class="inputs-drag-area">
+                        <div class="input-drop-zone" data-input="A">
+                            <div class="drop-zone-label">Input A</div>
+                            <div class="drop-zone-box" id="drop-zone-a" data-value="">
+                                <span class="drop-placeholder">ضع المفتاح هنا</span>
+                            </div>
+                        </div>
+
+                        <div class="input-drop-zone" data-input="B">
+                            <div class="drop-zone-label">Input B</div>
+                            <div class="drop-zone-box" id="drop-zone-b" data-value="">
+                                <span class="drop-placeholder">ضع المفتاح هنا</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="draggable-switches">
+                        <h3>اختر المفتاح:</h3>
+                        <div class="switches-container">
+                            <div class="draggable-switch" draggable="true" data-value="0">
+                                <div class="switch-visual off">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">OFF (0)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="0">
+                                <div class="switch-visual off">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">OFF (0)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="1">
+                                <div class="switch-visual on">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">ON (1)</span>
+                            </div>
+                            <div class="draggable-switch" draggable="true" data-value="1">
+                                <div class="switch-visual on">
+                                    <div class="switch-toggle"></div>
+                                </div>
+                                <span class="switch-label">ON (1)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="submit-answer-btn" id="submit-answer-btn">
+                    <span>تحقق من الإجابة</span>
+                    <span class="btn-icon">✓</span>
+                </button>
+            </section>
+
+            <!-- Feedback Modal (Popup) -->
+            <div class="feedback-modal-overlay" id="feedback-section" style="display: none;">
+                <div class="feedback-modal glass-card">
+                    <div class="feedback-content" id="feedback-content">
+                        <!-- Feedback will be shown here -->
+                    </div>
+                    <button class="next-question-btn" id="next-question-btn">
+                        <span>السؤال التالي</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Results (shown at the end) -->
+            <section class="quiz-results glass-card" id="quiz-results" style="display: none;">
+                <h2 class="section-title">🎉 انتهى الاختبار!</h2>
+                <div class="results-summary">
+                    <div class="result-stat">
+                        <div class="result-icon">✓</div>
+                        <div class="result-label">إجابات صحيحة</div>
+                        <div class="result-value" id="correct-answers">0</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-icon">✗</div>
+                        <div class="result-label">إجابات خاطئة</div>
+                        <div class="result-value" id="wrong-answers">0</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-icon">%</div>
+                        <div class="result-label">النسبة المئوية</div>
+                        <div class="result-value" id="final-percentage">0%</div>
+                    </div>
+                </div>
+                <div class="performance-message" id="performance-message">
+                    <!-- Performance message will be shown here -->
+                </div>
+                <button class="restart-quiz-btn" id="restart-quiz-btn">
+                    <span>ابدأ من جديد</span>
+                    <span class="btn-icon">🔄</span>
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>تم الانشاء بواسطة امير علي</p>
+            <p>بإشراف د. مهند الحلبوسي</p>
+            <div class="social-links">
+                <a href="https://t.me/sytus" target="_blank" rel="noopener noreferrer" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.14.121.099.155.232.171.326.016.094.036.308.02.475z" />
+                    </svg>
+                    <span>@sytus</span>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
