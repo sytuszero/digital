@@ -1,4 +1,4 @@
-const CACHE_NAME = 'digital-logic-v11';
+const CACHE_NAME = 'digital-logic-v12';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
