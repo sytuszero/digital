@@ -128,6 +128,7 @@ function init() {
     updateGateDisplay();
     updateOutput();
     generateTruthTable();
+    initFlipFlops();
 }
 
 // ==================== EVENT LISTENERS ====================
@@ -318,9 +319,788 @@ tabInputs.forEach(input => {
     input.addEventListener('change', (e) => {
         if (e.target.checked) {
             switchTab(e.target.value);
+            updateSlider();
         }
     });
 });
+
+// Dynamic slider positioning based on actual tab position
+function updateSlider() {
+    const slider = document.querySelector('.radio-group .slider');
+    const group = document.querySelector('.radio-group');
+    if (!slider || !group) return;
+
+    const checkedInput = group.querySelector('input[type="radio"]:checked');
+    if (!checkedInput) return;
+
+    const label = checkedInput.nextElementSibling;
+    if (!label) return;
+
+    const groupRect = group.getBoundingClientRect();
+    const labelRect = label.getBoundingClientRect();
+
+    // Position slider relative to the radio-group
+    slider.style.left = (labelRect.left - groupRect.left) + 'px';
+    slider.style.width = labelRect.width + 'px';
+    slider.style.right = 'auto';
+}
+
+// Update slider on load and resize
+window.addEventListener('resize', updateSlider);
+window.addEventListener('load', updateSlider);
+// Also run it immediately after a short delay for initial render
+setTimeout(updateSlider, 100);
+
+// ==================== FLIP-FLOPS & LATCHES ====================
+let currentFF = 'SR_HIGH';
+let ffStateQ = 0;
+let ffStateQBar = 1;
+let ffInputTop = false;
+let ffInputBottom = false;
+
+const FLIP_FLOPS = {
+    SR_HIGH: {
+        name: 'Active-HIGH input S-R Latch',
+        arabicDesc: 'ممسك (Latch) ذو الدخل الفعال العالي (Active-HIGH). يتكون من بوابتي NOR متعاكستين.<br>• <b>إذا كان S=1 و R=0:</b> سيتم تعيين الخرج ليصبح Q=1.<br>• <b>إذا كان S=0 و R=1:</b> سيتم تصفير الخرج ليصبح Q=0.<br>• <b>إذا كان S=0 و R=0:</b> سيحتفظ بحالته السابقة. الخط المضيء يدل على تدفق إشارة 1 في سلك التغذية العكسية للحفاظ على الحالة.<br>• <b>إذا كان S=1 و R=1:</b> حالة غير صالحة لأن Q و <span style="text-decoration:overline">Q</span> سيصبحان 0.',
+        topLabel: 'R',
+        bottomLabel: 'S',
+        hasClock: false,
+        update: (r, s) => {
+            let q = ffStateQ;
+            let qBar = ffStateQBar;
+            let invalid = false;
+            
+            if (s && r) { q = 0; qBar = 0; invalid = true; }
+            else if (s && !r) { q = 1; qBar = 0; }
+            else if (!s && r) { q = 0; qBar = 1; }
+            
+            return {
+                q, qBar, invalid,
+                internal: {
+                    'wire-r': r ? 1 : 0,
+                    'wire-s': s ? 1 : 0,
+                    'wire-q': q,
+                    'wire-qbar': qBar,
+                    'wire-q-fb': q,
+                    'wire-qbar-fb': qBar
+                }
+            };
+        },
+        symbolSVG: `<svg viewBox="0 0 800 500" style="width:100%; max-width:800px; height:auto;">
+            <!-- Top NOR Gate -->
+            <g transform="translate(400, 120)">
+                <path class="ff-gate-shape" d="M 0 0 Q 20 0 35 15 Q 50 30 60 45 Q 50 60 35 75 Q 20 90 0 90 Q 10 45 0 0 Z"/>
+                <circle cx="70" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            <!-- Bottom NOR Gate -->
+            <g transform="translate(400, 280)">
+                <path class="ff-gate-shape" d="M 0 0 Q 20 0 35 15 Q 50 30 60 45 Q 50 60 35 75 Q 20 90 0 90 Q 10 45 0 0 Z"/>
+                <circle cx="70" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+
+            <!-- Input Wires -->
+            <text x="10" y="152" fill="currentColor" font-family="JetBrains Mono" font-size="20">R</text>
+            <path id="ff-wire-r" class="ff-internal-wire" d="M 30 145 L 404 145" />
+
+            <text x="10" y="352" fill="currentColor" font-family="JetBrains Mono" font-size="20">S</text>
+            <path id="ff-wire-s" class="ff-internal-wire" d="M 30 345 L 404 345" />
+
+            <!-- Feedback Wires (Cross-Coupled X) -->
+            <path id="ff-wire-qbar-fb" class="ff-internal-wire" d="M 495 325 L 495 270 L 250 220 L 250 185 L 404 185" />
+            <path id="ff-wire-q-fb" class="ff-internal-wire" d="M 495 165 L 495 220 L 250 270 L 250 305 L 404 305" />
+
+            <!-- Output Wires -->
+            <path id="ff-wire-q" class="ff-internal-wire" d="M 480 165 L 750 165" />
+            <circle cx="495" cy="165" r="5" fill="currentColor"/>
+            <text x="760" y="172" fill="currentColor" font-family="JetBrains Mono" font-size="20">Q</text>
+
+            <path id="ff-wire-qbar" class="ff-internal-wire" d="M 480 325 L 750 325" />
+            <circle cx="495" cy="325" r="5" fill="currentColor"/>
+            <text x="760" y="332" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">Q</text>
+        </svg>`,
+        truthTableHead: ['R', 'S', 'Q', 'Q_bar', 'Comments'],
+        truthTableBody: [
+            [0, 0, 'NC', 'NC', 'No change.'],
+            [0, 1, 1, 0, 'Latch SET.'],
+            [1, 0, 0, 1, 'Latch RESET.'],
+            [1, 1, 0, 0, 'Invalid condition']
+        ]
+    },
+    SR_LOW: {
+        name: 'Active-LOW input S-R Latch',
+        arabicDesc: 'ممسك (Latch) ذو الدخل الفعال المنخفض (Active-LOW). يتكون من بوابتي NAND، ويعمل بالمنطق العكسي.<br>• <b>إذا كان <span style="text-decoration:overline">S</span>=0 و <span style="text-decoration:overline">R</span>=1:</b> سيتم تعيين الخرج Q=1.<br>• <b>إذا كان <span style="text-decoration:overline">S</span>=1 و <span style="text-decoration:overline">R</span>=0:</b> سيتم تصفير الخرج Q=0.<br>• <b>إذا كان <span style="text-decoration:overline">S</span>=1 و <span style="text-decoration:overline">R</span>=1:</b> سيحتفظ بحالته السابقة.<br>• <b>إذا كان <span style="text-decoration:overline">S</span>=0 و <span style="text-decoration:overline">R</span>=0:</b> حالة غير صالحة.',
+        topLabel: 'S_bar',
+        bottomLabel: 'R_bar',
+        hasClock: false,
+        update: (s_bar, r_bar) => {
+            let q = ffStateQ;
+            let qBar = ffStateQBar;
+            let invalid = false;
+            
+            if (!s_bar && !r_bar) { q = 1; qBar = 1; invalid = true; }
+            else if (!s_bar && r_bar) { q = 1; qBar = 0; }
+            else if (s_bar && !r_bar) { q = 0; qBar = 1; }
+            
+            return {
+                q, qBar, invalid,
+                internal: {
+                    'wire-s': s_bar ? 1 : 0,
+                    'wire-r': r_bar ? 1 : 0,
+                    'wire-q': q,
+                    'wire-qbar': qBar,
+                    'wire-q-fb': q,
+                    'wire-qbar-fb': qBar
+                }
+            };
+        },
+        symbolSVG: `<svg viewBox="0 0 800 500" style="width:100%; max-width:800px; height:auto;">
+            <!-- Top NAND Gate -->
+            <g transform="translate(400, 120)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            <!-- Bottom NAND Gate -->
+            <g transform="translate(400, 280)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+
+            <!-- Input Wires -->
+            <text x="10" y="152" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">S</text>
+            <path id="ff-wire-s" class="ff-internal-wire" d="M 40 145 L 400 145" />
+
+            <text x="10" y="352" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">R</text>
+            <path id="ff-wire-r" class="ff-internal-wire" d="M 40 345 L 400 345" />
+
+            <!-- Feedback Wires (Cross-Coupled X) -->
+            <path id="ff-wire-qbar-fb" class="ff-internal-wire" d="M 525 325 L 525 270 L 250 220 L 250 185 L 400 185" />
+            <path id="ff-wire-q-fb" class="ff-internal-wire" d="M 525 165 L 525 220 L 250 270 L 250 305 L 400 305" />
+
+            <!-- Output Wires -->
+            <path id="ff-wire-q" class="ff-internal-wire" d="M 510 165 L 750 165" />
+            <circle cx="525" cy="165" r="5" fill="currentColor"/>
+            <text x="760" y="172" fill="currentColor" font-family="JetBrains Mono" font-size="20">Q</text>
+
+            <path id="ff-wire-qbar" class="ff-internal-wire" d="M 510 325 L 750 325" />
+            <circle cx="525" cy="325" r="5" fill="currentColor"/>
+            <text x="760" y="332" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">Q</text>
+        </svg>`,
+        truthTableHead: ['S_bar', 'R_bar', 'Q', 'Q_bar', 'Comments'],
+        truthTableBody: [
+            [1, 1, 'NC', 'NC', 'No change.'],
+            [0, 1, 1, 0, 'Latch SET.'],
+            [1, 0, 0, 1, 'Latch RESET.'],
+            [0, 0, 1, 1, 'Invalid condition']
+        ]
+    },
+    D_LATCH: {
+        name: 'The Gated D Latch',
+        arabicDesc: 'ممسك D ذو البوابة (Gated D Latch). يحل مشكلة الحالة غير الصالحة في S-R بضمان أن المداخل متعاكسة عبر بوابة نفي.<br>• <b>عندما En = 1:</b> يمرر قيمة الدخل D مباشرة إلى الخرج Q (إذا كان D=1 فإن Q=1).<br>• <b>عندما En = 0:</b> يتجاهل D ويحتفظ بحالته السابقة.',
+        topLabel: 'D',
+        bottomLabel: null,
+        hasClock: true,
+        clockLabel: 'En',
+        update: (d, _, clk) => {
+            let d_val = d ? 1 : 0;
+            let en_val = clk ? 1 : 0;
+            let d_bar = d_val ? 0 : 1;
+            
+            let topNandOut = !(d_val && en_val) ? 1 : 0;
+            let botNandOut = !(d_bar && en_val) ? 1 : 0;
+            
+            let q = ffStateQ;
+            let qBar = ffStateQBar;
+            
+            if (!topNandOut && !botNandOut) { q = 1; qBar = 1; }
+            else if (!topNandOut && botNandOut) { q = 1; qBar = 0; }
+            else if (topNandOut && !botNandOut) { q = 0; qBar = 1; }
+
+            return {
+                q, qBar, invalid: false,
+                internal: {
+                    'wire-d': d_val,
+                    'wire-dbar': d_bar,
+                    'wire-en': en_val,
+                    'wire-s-star': topNandOut,
+                    'wire-r-star': botNandOut,
+                    'wire-q': q,
+                    'wire-qbar': qBar
+                }
+            };
+        },
+        symbolSVG: `<svg viewBox="0 0 800 500" style="width:100%; max-width:800px; height:auto;">
+            <!-- Left Input NANDs -->
+            <g transform="translate(300, 50)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            <g transform="translate(300, 350)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            
+            <!-- Inverter for D -->
+            <g transform="translate(170, 400)">
+                <path class="ff-gate-shape" d="M 0 0 L 0 30 L 40 15 Z"/>
+                <circle cx="45" cy="15" r="5" class="ff-gate-shape"/>
+            </g>
+
+            <!-- Right Latch NANDs -->
+            <g transform="translate(550, 70)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            <g transform="translate(550, 330)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+
+            <!-- Input Wires -->
+            <text x="10" y="82" fill="currentColor" font-family="JetBrains Mono" font-size="20">D</text>
+            <path id="ff-wire-d" class="ff-internal-wire" d="M 30 75 L 300 75 M 150 75 L 150 415 L 170 415" />
+            <circle cx="150" cy="75" r="4" fill="currentColor"/>
+
+            <path id="ff-wire-dbar" class="ff-internal-wire" d="M 220 415 L 300 415" />
+
+            <text x="10" y="252" fill="currentColor" font-family="JetBrains Mono" font-size="20">En</text>
+            <path id="ff-wire-en" class="ff-internal-wire" d="M 40 245 L 220 245 M 220 245 L 220 115 L 300 115 M 220 245 L 220 375 L 300 375" />
+            <circle cx="220" cy="245" r="4" fill="currentColor"/>
+
+            <!-- Intermediary Wires (Perfectly Horizontal) -->
+            <path id="ff-wire-s-star" class="ff-internal-wire" d="M 410 95 L 550 95" />
+            <path id="ff-wire-r-star" class="ff-internal-wire" d="M 410 395 L 550 395" />
+
+            <!-- Feedback Wires (Cross-Coupled X) -->
+            <path id="ff-wire-qbar" class="ff-internal-wire" d="M 660 375 L 750 375 M 670 375 L 670 305 L 480 185 L 480 135 L 550 135" />
+            <circle cx="670" cy="375" r="4" fill="currentColor"/>
+            <path id="ff-wire-q" class="ff-internal-wire" d="M 660 115 L 750 115 M 670 115 L 670 185 L 480 305 L 480 355 L 550 355" />
+            <circle cx="670" cy="115" r="4" fill="currentColor"/>
+
+            <text x="760" y="122" fill="currentColor" font-family="JetBrains Mono" font-size="20">Q</text>
+            <text x="760" y="382" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">Q</text>
+        </svg>`,
+        truthTableHead: ['En', 'D', 'Next state of Q'],
+        truthTableBody: [
+            [0, 'X', 'No change'],
+            [1, 0, 'Q = 0; reset state'],
+            [1, 1, 'Q = 1; set state']
+        ]
+    },
+
+    JK_FF: {
+        name: 'The J-K Flip-Flop (Edge-Triggered / Latch logic shown)',
+        arabicDesc: 'قلاب J-K. يعالج مشكلة الحالة غير الصالحة في قلاب S-R بإضافة تغذية عكسية من المخارج إلى المداخل.<br>• <b>إذا كان J=1 و K=0:</b> يعين الخرج Q=1.<br>• <b>إذا كان J=0 و K=1:</b> يصفر الخرج Q=0.<br>• <b>إذا كان J=1 و K=1:</b> يقوم بعكس حالته السابقة (Toggle). إذا كان 1 يصبح 0 والعكس. لا توجد حالة غير صالحة!',
+        topLabel: 'J',
+        bottomLabel: 'K',
+        hasClock: true,
+        clockLabel: 'CLK (↑)',
+        isEdgeTriggered: true,
+        update: (j, k) => {
+            // Note: True J-K flip flops are edge triggered. The diagram shown is a level-triggered latch.
+            // For educational purposes we'll toggle the internal states visually.
+            let j_val = j ? 1 : 0;
+            let k_val = k ? 1 : 0;
+            // Since it's edge-triggered simulation, the inputs to the first NANDs are momentarily active when pulse hits.
+            // We simulate the momentary state.
+            let topNandOut = !(j_val && 1 && ffStateQBar) ? 1 : 0; // clock is 1 momentarily
+            let botNandOut = !(k_val && 1 && ffStateQ) ? 1 : 0;
+            
+            let q = ffStateQ;
+            let qBar = ffStateQBar;
+            
+            if (!topNandOut && !botNandOut) { q = 1; qBar = 1; }
+            else if (!topNandOut && botNandOut) { q = 1; qBar = 0; }
+            else if (topNandOut && !botNandOut) { q = 0; qBar = 1; }
+
+            return {
+                q, qBar, invalid: false,
+                internal: {
+                    'wire-j': j_val,
+                    'wire-k': k_val,
+                    'wire-clk': 1, // momentarily 1 during pulse
+                    'wire-s-star': topNandOut,
+                    'wire-r-star': botNandOut,
+                    'wire-q': q,
+                    'wire-qbar': qBar
+                }
+            };
+        },
+        symbolSVG: `<svg viewBox="0 0 800 500" style="width:100%; max-width:800px; height:auto;">
+            <!-- Left Input NANDs (3 inputs) -->
+            <g transform="translate(300, 50)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+                <text x="45" y="52" text-anchor="middle" fill="currentColor" font-family="JetBrains Mono" font-size="20">G1</text>
+            </g>
+            <g transform="translate(300, 350)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+                <text x="45" y="52" text-anchor="middle" fill="currentColor" font-family="JetBrains Mono" font-size="20">G2</text>
+            </g>
+
+            <!-- Right Latch NANDs -->
+            <g transform="translate(550, 70)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+                <text x="45" y="52" text-anchor="middle" fill="currentColor" font-family="JetBrains Mono" font-size="20">G3</text>
+            </g>
+            <g transform="translate(550, 330)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+                <circle cx="100" cy="45" r="10" class="ff-gate-shape"/>
+                <text x="45" y="52" text-anchor="middle" fill="currentColor" font-family="JetBrains Mono" font-size="20">G4</text>
+            </g>
+
+            <!-- Input Wires -->
+            <text x="10" y="82" fill="currentColor" font-family="JetBrains Mono" font-size="20">J</text>
+            <path id="ff-wire-j" class="ff-internal-wire" d="M 30 75 L 300 75" />
+
+            <text x="10" y="252" fill="currentColor" font-family="JetBrains Mono" font-size="20">CLK</text>
+            <path id="ff-wire-clk" class="ff-internal-wire" d="M 40 245 L 220 245 M 220 245 L 220 115 L 300 115 M 220 245 L 220 375 L 300 375" />
+            <circle cx="220" cy="245" r="4" fill="currentColor"/>
+
+            <text x="10" y="422" fill="currentColor" font-family="JetBrains Mono" font-size="20">K</text>
+            <path id="ff-wire-k" class="ff-internal-wire" d="M 30 415 L 300 415" />
+
+            <!-- Intermediary Wires (Perfectly Horizontal) -->
+            <path id="ff-wire-s-star" class="ff-internal-wire" d="M 410 95 L 550 95" />
+            <path id="ff-wire-r-star" class="ff-internal-wire" d="M 410 395 L 550 395" />
+
+            <!-- Global Feedback from Q and Q_bar to input NANDs -->
+            <path id="ff-wire-qbar" class="ff-internal-wire" d="M 660 375 L 750 375 M 670 375 L 670 480 L 170 480 L 170 95 L 300 95 M 670 375 L 670 305 L 480 185 L 480 135 L 550 135" />
+            <circle cx="670" cy="375" r="4" fill="currentColor"/>
+
+            <path id="ff-wire-q" class="ff-internal-wire" d="M 660 115 L 750 115 M 670 115 L 670 10 L 120 10 L 120 395 L 300 395 M 670 115 L 670 185 L 480 305 L 480 355 L 550 355" />
+            <circle cx="670" cy="115" r="4" fill="currentColor"/>
+
+            <text x="760" y="122" fill="currentColor" font-family="JetBrains Mono" font-size="20">Q</text>
+            <text x="760" y="382" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">Q</text>
+        </svg>`,
+        truthTableHead: ['J', 'K', 'CLK', 'Q', 'Q_bar', 'Comments'],
+        truthTableBody: [
+            [0, 0, '↑', 'Q0', 'Q0_bar', 'No change'],
+            [0, 1, '↑', 0, 1, 'RESET'],
+            [1, 0, '↑', 1, 0, 'SET'],
+            [1, 1, '↑', 'Q0_bar', 'Q0', 'Toggle']
+        ]
+    },
+    T_FF: {
+        name: 'T (Toggle) Flip-Flop',
+        arabicDesc: 'قلاب T (Toggle). نسخة مبسطة من قلاب J-K حيث تم دمج المدخلين في مدخل واحد T.<br>• <b>إذا كان T=1:</b> في كل مرة تأتي فيها نبضة ساعة، سيعكس القلاب حالة الخرج Q.<br>• <b>إذا كان T=0:</b> لن يتأثر بنبضات الساعة وسيحتفظ بحالته الحالية.',
+        topLabel: 'T',
+        bottomLabel: null,
+        hasClock: true,
+        clockLabel: 'CP',
+        isEdgeTriggered: true,
+        update: (t) => {
+            let t_val = t ? 1 : 0;
+            // Matches the exact diagram layout:
+            // Top AND gets T, CP, and global feedback from Q
+            // Bottom AND gets T, CP, and global feedback from Q_bar
+            let topAnd = (t_val && 1 && ffStateQ) ? 1 : 0;
+            let botAnd = (t_val && 1 && ffStateQBar) ? 1 : 0;
+
+            let q = ffStateQ;
+            let qBar = ffStateQBar;
+
+            // Toggle on clock pulse if T=1
+            if (t_val) {
+                q = ffStateQBar;
+                qBar = ffStateQ;
+            }
+
+            return {
+                q, qBar, invalid: false,
+                internal: {
+                    'wire-t': t_val,
+                    'wire-clk': 1,
+                    'wire-and-top': topAnd,
+                    'wire-and-bot': botAnd,
+                    'wire-cc-q': q,
+                    'wire-cc-qbar': qBar,
+                    'wire-fb-q': q,
+                    'wire-fb-qbar': qBar,
+                    'wire-q': q,
+                    'wire-qbar': qBar
+                }
+            };
+        },
+        symbolSVG: `<svg viewBox="0 0 700 460" style="width:100%; max-width:700px; height:auto;">
+            <!-- Left Stage: AND Gates -->
+            <g transform="translate(250, 55)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+            </g>
+            <g transform="translate(250, 315)">
+                <path class="ff-gate-shape" d="M 0 0 L 50 0 Q 90 0 90 45 Q 90 90 50 90 L 0 90 Z"/>
+            </g>
+
+            <!-- Right Stage: NOR Gates -->
+            <g transform="translate(470, 75)">
+                <path class="ff-gate-shape" d="M 0 0 Q 20 0 35 15 Q 50 30 60 45 Q 50 60 35 75 Q 20 90 0 90 Q 10 45 0 0 Z"/>
+                <circle cx="70" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+            <g transform="translate(470, 295)">
+                <path class="ff-gate-shape" d="M 0 0 Q 20 0 35 15 Q 50 30 60 45 Q 50 60 35 75 Q 20 90 0 90 Q 10 45 0 0 Z"/>
+                <circle cx="70" cy="45" r="10" class="ff-gate-shape"/>
+            </g>
+
+            <!-- Inputs (T and CP) -->
+            <text x="5" y="107" fill="currentColor" font-family="JetBrains Mono" font-size="20">T</text>
+            <circle cx="25" cy="100" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path id="ff-wire-t" class="ff-internal-wire" d="M 30 100 L 250 100 M 50 100 L 50 360 L 250 360" />
+            <circle cx="50" cy="100" r="4" fill="currentColor"/>
+
+            <text x="50" y="237" fill="currentColor" font-family="JetBrains Mono" font-size="20">CP</text>
+            <circle cx="85" cy="230" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path id="ff-wire-clk" class="ff-internal-wire" d="M 90 230 L 150 230 M 150 230 L 150 130 L 250 130 M 150 230 L 150 330 L 250 330" />
+            <circle cx="150" cy="230" r="4" fill="currentColor"/>
+
+            <!-- Inter-stage Wires (STRAIGHT like the picture) -->
+            <path id="ff-wire-and-top" class="ff-internal-wire" d="M 340 100 L 476 100" />
+            <path id="ff-wire-and-bot" class="ff-internal-wire" d="M 340 360 L 476 360" />
+
+            <!-- NOR Latch Cross-Coupling (Top NOR goes to Bottom NOR, Bottom NOR to Top NOR) -->
+            <!-- Q to Bottom NOR (Routes around gate to avoid slicing it) -->
+            <path id="ff-wire-cc-q" class="ff-internal-wire" d="M 570 120 L 570 210 L 426 210 A 6 6 0 0 0 414 210 L 400 210 L 400 320 L 476 320" />
+            <circle cx="570" cy="120" r="4" fill="currentColor"/>
+            <!-- Q_bar to Top NOR (Routes around gate to avoid slicing it) -->
+            <path id="ff-wire-cc-qbar" class="ff-internal-wire" d="M 590 340 L 590 250 L 420 250 L 420 140 L 476 140" />
+            <circle cx="590" cy="340" r="4" fill="currentColor"/>
+
+            <!-- GLOBAL FEEDBACK (Around the outside) -->
+            <!-- Q feedback to Top AND -->
+            <path id="ff-wire-fb-q" class="ff-internal-wire" d="M 570 120 L 570 30 L 220 30 L 220 70 L 250 70" />
+            <!-- Q_bar feedback to Bottom AND -->
+            <path id="ff-wire-fb-qbar" class="ff-internal-wire" d="M 590 340 L 590 430 L 220 430 L 220 390 L 250 390" />
+
+            <!-- Output Wires -->
+            <path id="ff-wire-q" class="ff-internal-wire" d="M 550 120 L 660 120" />
+            <path id="ff-wire-qbar" class="ff-internal-wire" d="M 550 340 L 660 340" />
+
+            <!-- Output Labels -->
+            <text x="670" y="127" fill="currentColor" font-family="JetBrains Mono" font-size="20">Q</text>
+            <text x="670" y="347" fill="currentColor" font-family="JetBrains Mono" font-size="20" text-decoration="overline">Q</text>
+        </svg>`,
+        truthTableHead: ['T', 'Q', 'Q_next', 'Comment'],
+        truthTableBody: [
+            [0, 0, 0, 'Hold state'],
+            [0, 1, 1, 'Hold state'],
+            [1, 0, 1, 'Toggle'],
+            [1, 1, 0, 'Toggle']
+        ]
+    }
+};
+
+function initFlipFlops() {
+    const ffButtons = document.querySelectorAll('.flipflop-btn');
+    const toggleFFTop = document.getElementById('toggle-ff-top');
+    const toggleFFBottom = document.getElementById('toggle-ff-bottom');
+    const btnFFClock = document.getElementById('btn-ff-clock');
+
+    ffButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectFlipFlop(btn.dataset.ff);
+        });
+    });
+
+    toggleFFTop.addEventListener('change', () => {
+        ffInputTop = toggleFFTop.checked;
+        document.querySelector('.wire-ff-top').dataset.state = ffInputTop ? 1 : 0;
+        updateFlipFlopState(false);
+    });
+
+    toggleFFBottom.addEventListener('change', () => {
+        ffInputBottom = toggleFFBottom.checked;
+        document.querySelector('.wire-ff-bottom').dataset.state = ffInputBottom ? 1 : 0;
+        updateFlipFlopState(false);
+    });
+
+    btnFFClock.addEventListener('click', () => {
+        btnFFClock.style.transform = 'scale(0.95)';
+        setTimeout(() => btnFFClock.style.transform = 'none', 100);
+        updateFlipFlopState(true);
+    });
+
+    selectFlipFlop('SR_HIGH');
+}
+
+// Helper: Convert labels like 'S_bar' → '<span style="text-decoration:overline">S</span>'
+function formatBarLabel(label) {
+    if (label && label.includes('_bar')) {
+        const base = label.replace('_bar', '');
+        return `<span style="text-decoration:overline">${base}</span>`;
+    }
+    return label;
+}
+
+function selectFlipFlop(ffKey) {
+    currentFF = ffKey;
+    const ff = FLIP_FLOPS[ffKey];
+
+    ffStateQ = 0;
+    ffStateQBar = 1;
+    document.getElementById('invalid-warning').classList.remove('show');
+
+    document.querySelectorAll('.flipflop-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.ff === ffKey));
+
+    document.getElementById('label-ff-top').innerHTML = `Input ${formatBarLabel(ff.topLabel)}`;
+    
+    // Reset input toggles to off when switching flip-flop type
+    ffInputTop = false;
+    document.getElementById('toggle-ff-top').checked = false;
+    document.querySelector('.wire-ff-top').dataset.state = 0;
+    
+    if (ff.bottomLabel) {
+        document.getElementById('ff-input-bottom-control').style.display = 'flex';
+        document.getElementById('label-ff-bottom').innerHTML = `Input ${formatBarLabel(ff.bottomLabel)}`;
+    } else {
+        document.getElementById('ff-input-bottom-control').style.display = 'none';
+    }
+    ffInputBottom = false; 
+    document.getElementById('toggle-ff-bottom').checked = false;
+    document.querySelector('.wire-ff-bottom').dataset.state = 0;
+
+    if (ff.hasClock) {
+        document.getElementById('ff-clock-control').style.display = 'flex';
+        document.getElementById('label-ff-clock').textContent = ff.clockLabel;
+    } else {
+        document.getElementById('ff-clock-control').style.display = 'none';
+    }
+
+    // Hide/clear the explanation panel on type switch
+    const logPanel = document.getElementById('ff-action-log');
+    if (logPanel) { logPanel.style.display = 'none'; logPanel.classList.remove('ff-log-animate'); }
+    const logBody = document.getElementById('ff-log-body');
+    if (logBody) logBody.innerHTML = '';
+
+    document.getElementById('flipflop-svg').innerHTML = ff.symbolSVG;
+    document.getElementById('ff-name-display').textContent = ff.name;
+    generateFFTruthTable(ff);
+    
+    // For non-clocked latches, compute initial state from the reset input values
+    if (!ff.hasClock && !ff.isEdgeTriggered) {
+        const result = ff.update(ffInputTop, ffInputBottom);
+        if (result) {
+            if (result.invalid) {
+                document.getElementById('invalid-warning').classList.add('show');
+            }
+            ffStateQ = result.q;
+            ffStateQBar = result.qBar;
+            if (result.internal) {
+                for (const [wireId, state] of Object.entries(result.internal)) {
+                    const wireEl = document.getElementById("ff-" + wireId);
+                    if (wireEl) wireEl.dataset.state = state;
+                }
+            }
+        }
+    }
+
+}
+
+function updateFlipFlopState(isClockPulse) {
+    const ff = FLIP_FLOPS[currentFF];
+    let result;
+
+    if (ff.isEdgeTriggered) {
+        // Edge-triggered flip-flops only update on clock pulse
+        if (isClockPulse) {
+            result = ff.update(ffInputTop, ffInputBottom);
+        } else {
+            return;
+        }
+    } else if (currentFF === 'D_LATCH') {
+        // D Latch is level-sensitive: transparent when En=1
+        // On clock pulse button: momentarily enable (pass D through)
+        // On input change: if the latch concept is "pulse to apply", keep pulse behavior
+        if (isClockPulse) {
+            result = ff.update(ffInputTop, ffInputBottom, true);
+        } else {
+            return;
+        }
+    } else {
+        // Non-clocked latches (SR_HIGH, SR_LOW) update immediately on input change
+        result = ff.update(ffInputTop, ffInputBottom);
+    }
+
+    if (result) {
+        if (result.invalid) {
+            document.getElementById('invalid-warning').classList.add('show');
+            ffStateQ = result.q;
+            ffStateQBar = result.qBar;
+        } else {
+            document.getElementById('invalid-warning').classList.remove('show');
+            ffStateQ = result.q;
+            ffStateQBar = result.qBar;
+        }
+        
+        if (result.internal) {
+            for (const [wireId, state] of Object.entries(result.internal)) {
+                const wireEl = document.getElementById("ff-" + wireId);
+                if (wireEl) wireEl.dataset.state = state;
+            }
+        }
+
+
+        showFFExplanation(result, isClockPulse);
+    }
+}
+
+// ==================== FLIP-FLOP EXPLANATION PANEL ====================
+function showFFExplanation(result, isClockPulse) {
+    const panel = document.getElementById('ff-action-log');
+    const body  = document.getElementById('ff-log-body');
+    if (!panel || !body) return;
+
+    const ff    = FLIP_FLOPS[currentFF];
+    const top   = ffInputTop   ? 1 : 0;
+    const bot   = ffInputBottom ? 1 : 0;
+    const Q     = result.q;
+    const Qbar  = result.qBar;
+
+    // Build a human-readable label for each input
+    function inputLabel(key) {
+        if (!ff[key]) return null;
+        const raw = ff[key];
+        if (raw.includes('_bar')) return `<span style="text-decoration:overline">${raw.replace('_bar','')}</span>`;
+        return raw;
+    }
+    const topLbl = inputLabel('topLabel') || 'Top';
+    const botLbl = inputLabel('bottomLabel') || null;
+    const clkLbl = ff.clockLabel || 'CLK';
+
+    let lines = [];
+
+    // --- What the user did ---
+    if (isClockPulse) {
+        lines.push(`<span class="log-action">⏱ تم استقبال نبضة ${clkLbl}.</span>`);
+    } else {
+        lines.push(`<span class="log-action">🔀 تغير الدخل — ${topLbl} = <b>${top}</b>${botLbl ? `، ${botLbl} = <b>${bot}</b>` : ''}.</span>`);
+    }
+
+    // --- Per flip-flop explanation ---
+    switch (currentFF) {
+        case 'SR_HIGH': {
+            const R = top, S = bot;
+            if (result.invalid) {
+                lines.push(`⚠️ <b>حالة غير صالحة!</b> عندما يكون S=1 و R=1 في نفس الوقت، يُجبر كلا بوابتي NOR على إخراج 0، مما يجعل Q = Q̄ = 0. هذا ينتهك شرط التعاكس وتكون الحالة غير متوقعة.`);
+            } else if (S && !R) {
+                lines.push(`✅ <b>تفعيل (SET):</b> <span dir="ltr">S=1</span> يُجبر بوابة NOR السفلية على إخراج 0 (وهو Q̄). تنقل التغذية العكسية هذا الصفر إلى بوابة NOR العلوية، ومع <span dir="ltr">R=0</span>، تخرج بوابة NOR العلوية 1 (وهو Q). الحالة هي تفعيل.`);
+            } else if (!S && R) {
+                lines.push(`🔄 <b>إعادة ضبط (RESET):</b> <span dir="ltr">R=1</span> يُجبر بوابة NOR العلوية على إخراج 0 (وهو Q). تنقل التغذية العكسية هذا الصفر إلى بوابة NOR السفلية، ومع <span dir="ltr">S=0</span>، تخرج بوابة NOR السفلية 1 (وهو Q̄). الحالة هي إعادة ضبط.`);
+            } else {
+                lines.push(`🔒 <b>احتفاظ (Hold):</b> كل من S=0 و R=0. لا تُجبر أي بوابة NOR بواسطة المداخل. تقفل حلقة التغذية العكسية المتقاطعة الحالة السابقة. Q يبقى = <b>${Q}</b>، Q̄ يبقى = <b>${Qbar}</b>.`);
+            }
+            break;
+        }
+        case 'SR_LOW': {
+            const Sbar = top, Rbar = bot;
+            if (result.invalid) {
+                lines.push(`⚠️ <b>حالة غير صالحة!</b> عندما يكون S̄=0 و R̄=0 في نفس الوقت، يُجبر كلا بوابتي NAND على إخراج 1. Q = Q̄ = 1 — غير معرف لأنها يجب أن تكون متعاكسة.`);
+            } else if (!Sbar && Rbar) {
+                lines.push(`✅ <b>تفعيل (SET):</b> S̄=0 ينشط بوابة NAND العلوية (يصبح الخرج مرتفعاً → Q=1). R̄=1 يبقي NAND السفلية غير مدفوعة، وتكمل التغذية العكسية: Q̄ = 0.`);
+            } else if (Sbar && !Rbar) {
+                lines.push(`🔄 <b>إعادة ضبط (RESET):</b> R̄=0 ينشط بوابة NAND السفلية (يصبح الخرج مرتفعاً → Q̄=1). S̄=1 يبقي NAND العلوية غير مدفوعة، وتكمل التغذية العكسية: Q = 0.`);
+            } else {
+                lines.push(`🔒 <b>احتفاظ (Hold):</b> كل من S̄=1 و R̄=1. لا تُجبر أي بوابة NAND. تحافظ التغذية العكسية المتقاطعة على الحالة الحالية. Q يبقى = <b>${Q}</b>، Q̄ يبقى = <b>${Qbar}</b>.`);
+            }
+            break;
+        }
+        case 'D_LATCH': {
+            if (!isClockPulse) {
+                lines.push(`ℹ️ لم يتم تفعيل الدخل (En) بعد. تم ضبط الدخل D على <b>${top}</b>، لكن الممسك ينقل D → Q فقط عندما يتم إعطاء نبضة لـ En.`);
+            } else {
+                lines.push(`🔓 <b>تم تفعيل النبضة!</b> الممسك شفاف مؤقتاً. يتم تمرير D = <b>${top}</b> مباشرة إلى Q.`);
+                if (top) {
+                    lines.push(`→ <span dir="ltr">D=1</span>: بوابة NAND العلوية <span dir="ltr">(D·En) = 0</span>، بوابة NAND السفلية <span dir="ltr">(D̄·En) = 1</span>. ممسك SR الداخلي يستقبل <span dir="ltr">S̄=0, R̄=1</span> → <b>تفعيل (SET)</b>. <span dir="ltr">Q = 1, Q̄ = 0</span>.`);
+                } else {
+                    lines.push(`→ <span dir="ltr">D=0</span>: بوابة NAND العلوية <span dir="ltr">(D·En) = 1</span>، بوابة NAND السفلية <span dir="ltr">(D̄·En) = 0</span>. ممسك SR الداخلي يستقبل <span dir="ltr">S̄=1, R̄=0</span> → <b>إعادة ضبط (RESET)</b>. <span dir="ltr">Q = 0, Q̄ = 1</span>.`);
+                }
+            }
+            break;
+        }
+
+        case 'JK_FF': {
+            if (!isClockPulse) {
+                lines.push(`⏳ قلاب J-K يعمل بحافة النبضة. J = <b>${top}</b>، K = <b>${bot}</b> جاهزة لكن لن يتغير شيء حتى تأتي حافة النبضة ↑.`);
+            } else {
+                lines.push(`⬆️ <b>حافة نبضة الساعة! J = ${top}، K = ${bot}:</b>`);
+                if (!top && !bot) {
+                    lines.push(`→ J=0، K=0 → <b>لا تغيير.</b> بوابتي NAND عند الدخل تبقى عالية. ممسك SR الداخلي لم يتأثر. Q يحتفظ بحالته = <b>${Q}</b>.`);
+                } else if (!top && bot) {
+                    lines.push(`→ J=0، K=1 → <b>إعادة ضبط (RESET).</b> فقط المسار السفلي (K·Q_feedback) يتفعل. G2 تصبح منخفضة، مما يجبر الممسك الداخلي على إعادة الضبط. Q = 0، Q̄ = 1.`);
+                } else if (top && !bot) {
+                    lines.push(`→ J=1، K=0 → <b>تفعيل (SET).</b> فقط المسار العلوي (J·Q̄_feedback) يتفعل. G1 تصبح منخفضة، مما يجبر الممسك الداخلي على التفعيل. Q = 1، Q̄ = 0.`);
+                } else {
+                    lines.push(`→ J=1، K=1 → <b>عكس الحالة (Toggle)!</b> كلا المسارين يتفعلان في نفس الوقت. تنعكس الحالة. Q = <b>${Q}</b>، Q̄ = <b>${Qbar}</b>.`);
+                }
+            }
+            break;
+        }
+        case 'T_FF': {
+            if (!isClockPulse) {
+                lines.push(`⏳ قلاب T يعمل بحافة النبضة. T = <b>${top}</b>. لن يتغير شيء حتى تأتي النبضة.`);
+            } else {
+                lines.push(`⬆️ <b>نبضة ساعة! T = ${top}:</b>`);
+                if (!top) {
+                    lines.push(`→ T=0 → <b>احتفاظ بالحالة.</b> كلا بوابتي AND تخرج 0. لا يتغير دخل أي بوابة NOR. Q يبقى = <b>${Q}</b>.`);
+                } else {
+                    lines.push(`→ T=1 → <b>عكس الحالة (Toggle)!</b> بوابة AND المتصلة بـ Q̄ تفعل NOR العلوية، وبوابة AND المتصلة بـ Q تفعل NOR السفلية. ينعكس ممسك NOR المتقاطع. Q = <b>${Q}</b>، Q̄ = <b>${Qbar}</b>.`);
+                }
+            }
+            break;
+        }
+    }
+
+    // --- Final state summary ---
+    const stateEmoji = result.invalid ? '❌' : (Q ? '🟢' : '⚫');
+    lines.push(`${stateEmoji} <b>الخرج الحالي:</b> <span dir="ltr">Q = <b>${Q}</b>, Q̄ = <b>${Qbar}</b></span>${result.invalid ? ' &nbsp;(⚠️ غير صالح)' : ''}.`);
+
+    body.innerHTML = lines.map(l => `<div class="ff-log-line">${l}</div>`).join('');
+
+    // Animate in
+    panel.style.display = 'block';
+    panel.classList.remove('ff-log-animate');
+    void panel.offsetWidth; // force reflow
+    panel.classList.add('ff-log-animate');
+}
+
+
+
+function generateFFTruthTable(ff) {
+    const ffTruthTable = document.getElementById('ff-truth-table');
+    let thead = '<thead><tr>';
+    ff.truthTableHead.forEach(h => {
+        // Handle underscores for subscripts or overlines
+        let formattedH = h.replace('_bar', '<span style="text-decoration: overline;"></span>').replace('Q0', 'Q<sub>0</sub>');
+        if(h.includes('_bar')) {
+             formattedH = `<span style="text-decoration: overline;">${h.replace('_bar','')}</span>`;
+        }
+        thead += `<th>${formattedH}</th>`;
+    });
+    thead += '</tr></thead>';
+
+    let tbody = '<tbody>';
+    ff.truthTableBody.forEach(row => {
+        tbody += '<tr>';
+        row.forEach(cell => {
+            let className = '';
+            if (cell === 'Invalid condition') className = 'color: var(--color-off); font-weight: bold;';
+            
+            let formattedCell = cell;
+            if(typeof cell === 'string') {
+                if(cell.includes('_bar')) {
+                    formattedCell = `<span style="text-decoration: overline;">${cell.replace('_bar','').replace('Q0', 'Q<sub>0</sub>')}</span>`;
+                } else if (cell.includes('Q0')) {
+                    formattedCell = cell.replace('Q0', 'Q<sub>0</sub>');
+                }
+            }
+            tbody += `<td style="${className}">${formattedCell}</td>`;
+        });
+        tbody += '</tr>';
+    });
+    tbody += '</tbody>';
+
+    ffTruthTable.innerHTML = thead + tbody;
+}
 
 // ==================== NUMBER SYSTEM CONVERTER ====================
 const fromBaseSelect = document.getElementById('from-base');
